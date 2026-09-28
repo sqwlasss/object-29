@@ -13,7 +13,8 @@ const SHOPIFY_STORE_DOMAIN = process.env.VITE_SHOPIFY_STORE_DOMAIN;
 const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 // Match src/lib/shopify/client.js, which uses VITE_SHOPIFY_API_VERSION for the endpoint.
 const SHOPIFY_API_VERSION = process.env.VITE_SHOPIFY_API_VERSION || "2024-10";
-const SITE = "https://ddouble-store.vercel.app";
+// Mirrors src/config/site.js. Set VITE_SITE_URL for the real domain.
+const SITE = (process.env.VITE_SITE_URL || "https://ddouble-store.vercel.app").replace(/\/+$/, "");
 
 if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
   console.error("Missing env vars VITE_SHOPIFY_STORE_DOMAIN / VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN");

@@ -15,7 +15,7 @@ const FAQ_SECTIONS = [
       },
       {
         q: "Do you ship internationally?",
-        a: "Yes, we ship worldwide. European orders benefit from free shipping over €50. International shipping costs are calculated at checkout based on your location.",
+        a: "Yes, we ship worldwide. Shipping is free above the threshold shown in your cart; below it, cost is calculated at checkout based on your destination.",
       },
       {
         q: "Can I track my order?",
@@ -41,7 +41,7 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "What paper do you use?",
-        a: "All prints are produced on 200gsm museum-grade fine art paper with a subtle matte finish. We use archival pigment inks that resist fading for over 100 years.",
+        a: "Paper stock, finish and print method are listed in the specification on each product page, because they vary by object.",
       },
       {
         q: "What sizes are available?",
@@ -54,11 +54,11 @@ const FAQ_SECTIONS = [
     ],
   },
   {
-    title: "About DDouble",
+    title: "About ØBJECT 29",
     items: [
       {
         q: "Where are your prints made?",
-        a: "All prints are produced in our partner studio in Copenhagen, Denmark, using sustainable processes and eco-friendly packaging materials.",
+        a: "Production and packaging details are listed on each product page. Where an object has specific material or sourcing information, it appears in its specification.",
       },
       {
         q: "Do you collaborate with artists?",
@@ -88,10 +88,10 @@ export default function FAQ() {
   );
 
   return (
-    <div className="bg-[#F9F9F7] min-h-screen">
+    <div className="bg-o29-bone min-h-screen">
       <Seo
-        title="FAQ — DDouble | Orders, Shipping & Returns"
-        description="Answers on ordering, shipping, returns, sizes, and print quality — everything you need to know about DDouble fine-art prints."
+        title="FAQ — ØBJECT 29"
+        description="Answers on ordering, shipping, returns, sizes, and print quality — everything you need to know about ordering from ØBJECT 29."
         canonicalPath="/faq"
         jsonLd={faqJsonLd}
       />
@@ -99,11 +99,11 @@ export default function FAQ() {
       <main id="main">
       <div className="pt-28 md:pt-36 pb-24 md:pb-32 px-6 md:px-10 lg:px-16 max-w-3xl mx-auto">
         <FadeIn>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">Help</span>
-          <h1 className="mt-4 text-4xl md:text-5xl font-light text-[#1A1A1A]">
+          <span className="text-[11px] uppercase tracking-[0.2em] text-o29-slate">Help</span>
+          <h1 className="mt-4 font-display text-h1 font-medium text-o29-ink">
             Frequently Asked Questions
           </h1>
-          <p className="mt-4 text-sm text-[#6B6B67]">
+          <p className="mt-4 text-sm text-o29-slate">
             Everything you need to know about ordering, shipping, and our prints.
           </p>
         </FadeIn>
@@ -112,14 +112,14 @@ export default function FAQ() {
           {FAQ_SECTIONS.map((section, si) => (
             <FadeIn key={si} delay={si * 0.08}>
               <div>
-                <h2 className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56] mb-4">{section.title}</h2>
+                <h2 className="text-[11px] uppercase tracking-[0.2em] text-o29-slate mb-4">{section.title}</h2>
                 <Accordion type="single" collapsible>
                   {section.items.map((item, i) => (
-                    <AccordionItem key={i} value={`${si}-${i}`} className="border-b border-[#E5E5E1]">
-                      <AccordionTrigger className="text-sm text-[#1A1A1A] font-normal hover:no-underline py-5 text-left">
+                    <AccordionItem key={i} value={`${si}-${i}`} className="border-b border-o29-rule">
+                      <AccordionTrigger className="text-sm text-o29-ink font-normal hover:no-underline py-5 text-left">
                         {item.q}
                       </AccordionTrigger>
-                      <AccordionContent className="text-sm text-[#6B6B67] leading-relaxed pb-5">
+                      <AccordionContent className="text-sm text-o29-slate leading-relaxed pb-5">
                         {item.a}
                       </AccordionContent>
                     </AccordionItem>

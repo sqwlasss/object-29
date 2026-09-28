@@ -36,9 +36,15 @@ const AccountWishlist = lazy(() => import('./pages/account/Wishlist'));
 const AccountSettings = lazy(() => import('./pages/account/Settings'));
 
 function LoadingSpinner() {
+  // A 1px rule sweeping the container, not a spinner. Under
+  // prefers-reduced-motion the animation collapses to 1ms rather than being
+  // removed, so the bar simply sits still instead of vanishing.
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-[#E5E5E1] border-t-[#1A1A1A] rounded-full animate-spin"></div>
+    <div className="o29-field o29-field--bone fixed inset-0 flex items-start justify-center">
+      <div className="mt-hold h-px w-40 bg-o29-rule">
+        <div className="h-px w-full origin-left animate-rule-sweep bg-o29-ink" />
+      </div>
+      <span className="sr-only">Loading</span>
     </div>
   );
 }
@@ -54,13 +60,15 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <main id="main" className="min-h-screen flex items-center justify-center bg-[#F9F9F7]">
-          <div className="text-center px-6">
-            <h1 className="text-2xl font-light text-[#1A1A1A]">Something went wrong</h1>
-            <p className="mt-4 text-sm text-[#6B6B67]">Please try refreshing the page.</p>
+        <main id="main" className="o29-field o29-field--bone flex min-h-screen items-center justify-center px-gutter">
+          <div className="max-w-reading">
+            <h1 className="font-display text-h2 font-medium text-o29-ink">Something went wrong</h1>
+            <p className="mt-4 text-sm text-o29-slate">
+              The page failed to load. Refreshing usually fixes it.
+            </p>
             <button
               onClick={() => window.location.reload()}
-              className="mt-6 text-xs uppercase tracking-[0.1em] underline underline-offset-4 text-[#1A1A1A]"
+              className="o29-meta o29-hit mt-6 flex items-center text-o29-ink underline underline-offset-4"
             >
               Refresh
             </button>
@@ -73,20 +81,17 @@ class ErrorBoundary extends React.Component {
 }
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth } = useAuth();
 
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  if (isLoadingAuth) {
     return <LoadingSpinner />;
   }
 
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
-    }
-  }
+  // Removed here: an `authError` branch that rendered <UserNotRegisteredError />
+  // without importing it, and read `isLoadingPublicSettings`. AuthContext
+  // provides neither value, so both were permanently undefined and the branch
+  // was unreachable — it would have thrown a ReferenceError if it ever ran.
+  // The component it referenced is deleted along with it.
 
   return (
     <Suspense fallback={<LoadingSpinner />}>

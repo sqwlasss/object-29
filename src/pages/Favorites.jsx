@@ -1,18 +1,26 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Heart } from "lucide-react";
 import { useFavorites } from "@/lib/FavoritesContext";
 import { useCurrency } from "@/lib/CurrencyContext";
 import { useAllProducts } from "@/hooks/useProducts";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/ddouble/Navbar";
 import Footer from "@/components/ddouble/Footer";
 import ProductCard from "@/components/ddouble/ProductCard";
+import MetaLabel from "@/components/o29/MetaLabel";
 
+/**
+ * Saved works. A transactional surface: bone, ink footer, no colour field and
+ * no mark. Previously had no <Seo> block at all, so it inherited whatever the
+ * last visited page had written into document.head.
+ */
 export default function Favorites() {
   const { favorites, favoritesCount } = useFavorites();
   const { country } = useCurrency();
   const { data: allProducts } = useAllProducts(country);
 
+  // Re-resolve saved items against live data so prices and availability are
+  // current, falling back to the stored snapshot when a product is gone.
   const liveProducts = useMemo(() => {
     if (!allProducts) return favorites;
     const productMap = new Map(allProducts.map((p) => [p.id, p]));
@@ -20,47 +28,46 @@ export default function Favorites() {
   }, [allProducts, favorites]);
 
   return (
-    <div className="bg-[#F9F9F7] min-h-screen">
+    <div className="o29-field o29-field--bone min-h-screen">
+      <Seo
+        noindex
+        title="Saved — ØBJECT 29"
+        description="Objects you have saved."
+        canonicalPath="/favorites"
+      />
       <Navbar />
-      <main id="main">
-        <div className="pt-28 md:pt-36 pb-24 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto">
-          <h1 className="text-3xl md:text-4xl font-light text-[#1A1A1A] mb-12 md:mb-16">
-            Favorites
-          </h1>
+
+      <main id="main" className="pt-header">
+        <div className="mx-auto w-full max-w-page px-gutter pb-quiet pt-tight">
+          <MetaLabel
+            items={["ØBJECT 29", favoritesCount > 0 ? `${favoritesCount} saved` : null]}
+            className="text-o29-slate"
+          />
+          <h1 className="mt-4 font-display text-h1 font-medium text-o29-ink">Saved</h1>
+
           {favorites.length === 0 ? (
-            <div className="py-24 text-center">
-              <Heart
-                size={48}
-                className="mx-auto text-[#D9D2C5] mb-6"
-              />
-              <h2 className="text-2xl font-light text-[#1A1A1A] mb-3">
-                Your favorites list is empty.
-              </h2>
-              <p className="text-sm text-[#6B6B67] mb-8">
-                Save your favorite prints by tapping the heart icon.
+            <div className="py-quiet">
+              <p className="max-w-reading text-lead text-o29-ink">
+                Nothing saved yet. The heart on any object keeps it here.
               </p>
               <Link
                 to="/shop"
-                className="inline-block text-xs uppercase tracking-[0.1em] underline underline-offset-4 text-[#1A1A1A]"
+                className="o29-meta mt-8 inline-flex min-h-hit items-center border-b border-o29-edge pb-1 text-o29-ink transition-colors duration-instant hover:border-o29-ochre"
               >
-                Continue Shopping
+                Browse the collection
               </Link>
             </div>
           ) : (
-            <>
-              <p className="mt-2 text-sm text-[#6B6B67] mb-12 md:mb-16">
-                {favoritesCount} {favoritesCount === 1 ? "print" : "prints"}
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-                {liveProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} showHeart />
-                ))}
-              </div>
-            </>
+            <div className="mt-tight grid grid-cols-2 gap-x-5 gap-y-20 lg:grid-cols-3">
+              {liveProducts.map((product, i) => (
+                <ProductCard key={product.id} product={product} index={i} showHeart />
+              ))}
+            </div>
           )}
         </div>
       </main>
-      <Footer />
+
+      <Footer tone="ink" />
     </div>
   );
 }

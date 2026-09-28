@@ -71,11 +71,11 @@ export default function Register() {
         subtitle={`We emailed a verification link to ${email}`}
       >
         {error && (
-          <p id="register-resend-error" role="alert" className="mb-4 p-3 text-xs text-[#1A1A1A] border border-[#E5E5E1] bg-[#F1F0EC]">
+          <p id="register-resend-error" role="alert" className="mb-4 p-3 text-xs text-o29-ink border border-o29-rule bg-o29-bone-2">
             {error}
           </p>
         )}
-        <p className="text-sm text-[#6B6B67] text-center">
+        <p className="text-sm text-o29-slate text-center">
           Click the link in the email to verify your account, then log in.
         </p>
         <div className="mt-6">
@@ -83,9 +83,9 @@ export default function Register() {
             {loading ? "Sending…" : "Resend email"}
           </Button>
         </div>
-        <p className="text-center text-sm text-[#6B6B67] mt-4">
+        <p className="text-center text-sm text-o29-slate mt-4">
           Already verified?{" "}
-          <Link to="/login" className="text-[#1A1A1A] underline underline-offset-4">
+          <Link to="/login" className="text-o29-ink underline underline-offset-4">
             Log in
           </Link>
         </p>
@@ -101,7 +101,7 @@ export default function Register() {
       footer={
         <>
           Already have an account?{" "}
-          <Link to="/login" className="text-[#1A1A1A] font-medium hover:underline">
+          <Link to="/login" className="text-o29-ink font-medium hover:underline">
             Log in
           </Link>
         </>
@@ -109,7 +109,7 @@ export default function Register() {
     >
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-sm text-[#6B6B67] hover:text-[#1A1A1A] transition-colors mb-6"
+        className="flex items-center gap-2 text-sm text-o29-slate hover:text-o29-ink transition-colors mb-6"
       >
         <ArrowLeft className="w-4 h-4" />
         Back
@@ -126,15 +126,15 @@ export default function Register() {
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-[#E5E5E1]" />
+          <div className="w-full border-t border-o29-rule" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-[#F9F9F7] px-3 text-[#6B6B67]">or</span>
+          <span className="bg-o29-bone px-3 text-o29-slate">or</span>
         </div>
       </div>
 
       {error && (
-        <p id="register-error" role="alert" className="mb-4 p-3 text-xs text-[#1A1A1A] border border-[#E5E5E1] bg-[#F1F0EC]">
+        <p id="register-error" role="alert" className="mb-4 p-3 text-xs text-o29-ink border border-o29-rule bg-o29-bone-2">
           {error}
         </p>
       )}
@@ -143,7 +143,7 @@ export default function Register() {
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" aria-hidden="true" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" aria-hidden="true" />
             <Input
               id="email"
               type="email"
@@ -161,7 +161,7 @@ export default function Register() {
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" aria-hidden="true" />
             <Input
               id="password"
               type="password"
@@ -178,7 +178,7 @@ export default function Register() {
         <div className="space-y-2">
           <Label htmlFor="confirm">Confirm Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" aria-hidden="true" />
             <Input
               id="confirm"
               type="password"

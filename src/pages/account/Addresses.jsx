@@ -103,7 +103,7 @@ export default function Addresses() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-medium text-[#1A1A1A]">Addresses</h2>
+        <h2 className="text-lg font-medium text-o29-ink">Addresses</h2>
         {!showForm && (
           <Button
             onClick={() => { setShowForm(true); setEditingId(null); setForm(emptyAddress); }}
@@ -117,7 +117,7 @@ export default function Addresses() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="border border-[#E5E5E1] p-5 mb-6 space-y-4 max-w-lg">
+        <form onSubmit={handleSubmit} className="border border-o29-rule p-5 mb-6 space-y-4 max-w-lg">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="addr-first">First name</Label>
@@ -235,12 +235,12 @@ export default function Addresses() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin text-[#6B6B67]" />
+          <Loader2 className="w-6 h-6 animate-spin text-o29-slate" />
         </div>
       ) : addressList.length === 0 ? (
-        <div className="text-center py-12 border border-dashed border-[#E5E5E1]">
-          <MapPin size={32} className="mx-auto text-[#D9D2C5] mb-3" />
-          <p className="text-sm text-[#6B6B67]">No addresses saved yet.</p>
+        <div className="text-center py-12 border border-dashed border-o29-rule">
+          <MapPin size={32} className="mx-auto text-o29-rule mb-3" />
+          <p className="text-sm text-o29-slate">No addresses saved yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -249,26 +249,26 @@ export default function Addresses() {
             return (
               <div
                 key={addr.id}
-                className={`border p-5 relative ${isDefault ? "border-[#1A1A1A]" : "border-[#E5E5E1]"}`}
+                className={`border p-5 relative ${isDefault ? "border-o29-ink" : "border-o29-rule"}`}
               >
                 {isDefault && (
-                  <span className="absolute top-3 right-3 text-xs uppercase tracking-[0.1em] bg-[#1A1A1A] text-white px-2 py-0.5">
+                  <span className="absolute top-3 right-3 text-xs uppercase tracking-[0.1em] bg-o29-ink text-o29-bone px-2 py-0.5">
                     Default
                   </span>
                 )}
-                <p className="text-sm font-medium text-[#1A1A1A] mb-1">
+                <p className="text-sm font-medium text-o29-ink mb-1">
                   {addr.fullName || "No name"}
                 </p>
-                <p className="text-sm text-[#6B6B67] leading-relaxed">
+                <p className="text-sm text-o29-slate leading-relaxed">
                   {addr.fullAddress}
                 </p>
                 {addr.phone && (
-                  <p className="text-xs text-[#6B6B67] mt-1">{addr.phone}</p>
+                  <p className="text-xs text-o29-slate mt-1">{addr.phone}</p>
                 )}
-                <div className="flex items-center gap-3 mt-4 pt-3 border-t border-[#E5E5E1]">
+                <div className="flex items-center gap-3 mt-4 pt-3 border-t border-o29-rule">
                   <button
                     onClick={() => startEdit(addr)}
-                    className="flex items-center gap-1 text-[11px] uppercase tracking-[0.1em] text-[#6B6B67] hover:text-[#1A1A1A] transition-colors"
+                    className="flex items-center gap-1 text-[11px] uppercase tracking-[0.1em] text-o29-slate hover:text-o29-ink transition-colors"
                   >
                     <Pencil size={12} />
                     Edit
@@ -277,7 +277,7 @@ export default function Addresses() {
                     <>
                       <button
                         onClick={() => handleSetDefault(addr.id)}
-                        className="text-[11px] uppercase tracking-[0.1em] text-[#6B6B67] hover:text-[#1A1A1A] transition-colors"
+                        className="text-[11px] uppercase tracking-[0.1em] text-o29-slate hover:text-o29-ink transition-colors"
                       >
                         Set as default
                       </button>

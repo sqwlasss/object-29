@@ -1,22 +1,31 @@
 import * as React from "react";
 import { cva } from "class-variance-authority";
+import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const ToastProvider = React.forwardRef(({ ...props }, ref) => (
-  <div
-    ref={ref}
-    className="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"
-    {...props}
-  />
-));
+/**
+ * ToastProvider used to render its own fixed, full-height container and
+ * ToastViewport rendered a second, identical one stacked on top of it. Toasts
+ * went into the first; the second — the one carrying role="status" and
+ * aria-live="polite" — was always EMPTY, so "Added to cart" was never
+ * announced to a screen reader.
+ *
+ * ToastProvider is now a passthrough and ToastViewport is the single container
+ * AND the live region, with the toasts inside it.
+ */
+const ToastProvider = ({ children }) => <>{children}</>;
 ToastProvider.displayName = "ToastProvider";
 
-const ToastViewport = React.forwardRef(({ ...props }, ref) => (
+const ToastViewport = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
     role="status"
     aria-live="polite"
-    className="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"
+    className={cn(
+      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+      className
+    )}
+    style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
     {...props}
   />
 ));

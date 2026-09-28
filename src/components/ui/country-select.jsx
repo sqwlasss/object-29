@@ -125,8 +125,8 @@ export default function CountrySelect({ value, onChange, id, required, className
           aria-haspopup="listbox"
         aria-expanded={open}
         className={cn(
-          "flex h-9 w-full items-center justify-between rounded-none border border-[#E5E5E1] bg-transparent px-3 py-1 text-base transition-colors hover:bg-[#F1F0EC] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-          !selected && "text-[#5A5A56]",
+          "flex min-h-hit w-full items-center justify-between rounded-none border border-o29-edge bg-transparent px-3 py-2 text-base transition-colors duration-instant hover:bg-o29-bone-2 disabled:cursor-not-allowed disabled:border-o29-rule disabled:bg-o29-bone-2 disabled:text-o29-slate md:text-sm",
+          !selected && "text-o29-slate",
           className
         )}
       >
@@ -136,21 +136,21 @@ export default function CountrySelect({ value, onChange, id, required, className
             <span className="truncate">{selected.name}</span>
           </span>
         ) : (
-          <span className="text-[#5A5A56]">{placeholder}</span>
+          <span className="text-o29-slate">{placeholder}</span>
         )}
         <ChevronDown
           size={14}
           className={cn(
-            "shrink-0 text-[#6B6B67] transition-transform",
+            "shrink-0 text-o29-slate transition-transform",
             open && "rotate-180"
           )}
         />
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-1 w-full rounded-none border border-[#E5E5E1] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.03)] max-h-72 flex flex-col">
-          <div className="flex items-center gap-2 border-b border-[#E5E5E1] px-3 py-2">
-            <Search size={14} className="shrink-0 text-[#6B6B67]" />
+        <div className="o29-field o29-field--bone absolute z-50 mt-1 flex max-h-72 w-full flex-col rounded-none border border-hairline">
+          <div className="flex items-center gap-2 border-b border-hairline px-3 py-2">
+            <Search size={14} className="shrink-0 text-o29-slate" />
             <input
               ref={searchInputRef}
               type="text"
@@ -161,7 +161,7 @@ export default function CountrySelect({ value, onChange, id, required, className
               }}
               onKeyDown={handleKeyDown}
               placeholder="Search countries..."
-              className="flex-1 bg-transparent text-sm placeholder:text-[#6B6B67]"
+              className="flex-1 bg-transparent text-sm placeholder:text-o29-slate"
             />
           </div>
           <ul
@@ -170,7 +170,7 @@ export default function CountrySelect({ value, onChange, id, required, className
             className="flex-1 overflow-y-auto py-1"
           >
             {filtered.length === 0 ? (
-              <li className="px-3 py-2 text-sm text-[#6B6B67]">No countries found</li>
+              <li className="px-3 py-2 text-sm text-o29-slate">No countries found</li>
             ) : (
               filtered.map((country, idx) => (
                 <li
@@ -182,15 +182,15 @@ export default function CountrySelect({ value, onChange, id, required, className
                   className={cn(
                     "flex items-center gap-2 px-3 py-1.5 text-sm cursor-pointer transition-colors",
                     highlightedIndex === idx
-                      ? "bg-[#F1F0EC]"
-                      : "hover:bg-[#F1F0EC]",
+                      ? "bg-o29-bone-2"
+                      : "hover:bg-o29-bone-2",
                     value === country.code && "font-medium"
                   )}
                 >
                   <span className="text-base leading-none">{country.flag}</span>
                   <span className="flex-1 truncate">{country.name}</span>
                   {value === country.code && (
-                    <Check size={14} className="shrink-0 text-[#1A1A1A]" />
+                    <Check size={14} className="shrink-0 text-o29-ink" />
                   )}
                 </li>
               ))

@@ -31,13 +31,13 @@ export default function ForgotPassword() {
       title="Reset password"
       subtitle="We'll send you a link to reset it"
       footer={
-        <Link to="/login" className="text-[#1A1A1A] font-medium hover:underline">
+        <Link to="/login" className="text-o29-ink font-medium hover:underline">
           <ArrowLeft className="w-3 h-3 inline mr-1" />Back to log in
         </Link>
       }
     >
       {sent ? (
-        <p className="text-sm text-[#1A1A1A] text-center">
+        <p className="text-sm text-o29-ink text-center">
           If an account exists with that email, you'll receive a password reset link shortly.
         </p>
       ) : (
@@ -45,7 +45,7 @@ export default function ForgotPassword() {
           <div className="space-y-2">
             <Label htmlFor="email">Email address</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" aria-hidden="true" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" aria-hidden="true" />
               <Input
                 id="email"
                 type="email"

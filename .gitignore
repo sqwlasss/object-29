@@ -33,3 +33,16 @@ dist-ssr
 .env
 .vite
 # base44/.app.jsonc (Base44 removed)
+
+# preview mode env — no secrets, committed on purpose
+!.env.preview
+
+# Syncthing's per-folder marker — machine-local, must never be committed
+.stfolder/
+.stversions/
+
+# Brand reference imagery. Kept on disk for art direction, deliberately NOT
+# committed: these are Instagram screenshots containing a recognisable
+# person's likeness and platform UI, i.e. third-party material this repo has
+# no right to redistribute. Nothing in src/ imports them.
+product_photo_new/

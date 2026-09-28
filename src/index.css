@@ -2,7 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Inter variable font, self-hosted latin subset (weights 100-900; app uses 300-600) */
+/* ══════════════════════════════════════════════════════════════════════
+   ØBJECT 29 — src/index.css
+   Replaces the current lines 5–112. The three @tailwind directives at
+   lines 1–3 stay exactly as they are.
+   The shadcn variable NAMES are unchanged so every src/components/ui/*
+   primitive keeps compiling; only their VALUES change, and they now point
+   at the same HSL channel triplets as the --o29-* layer, so there is one
+   colour idiom and Tailwind opacity modifiers keep working.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. FACES ─────────────────────────────────────────────────────────── */
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -11,103 +21,250 @@
   src: url("/fonts/inter-latin.woff2") format("woff2");
 }
 
+/* Archivo Variable (Omnibus-Type, SIL OFL 1.1) — display only.
+   Build EXACTLY in this order; subsetting alone keeps both full axis
+   ranges and roughly doubles the file:
+     fonttools varLib.instancer "Archivo[wdth,wght].ttf" \
+       wght=400:600 wdth=85:112 -o archivo-trim.ttf
+     pyftsubset archivo-trim.ttf --flavor=woff2 \
+       --output-file=public/fonts/archivo-latin.woff2 \
+       --layout-features='kern,liga,calt,tnum' \
+       --unicodes='U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+2212,U+2192'
+   U+00D8 (Ø) and U+00F8 (ø) are inside U+0000-00FF, so the ØBJECT 29
+   wordmark stays live selectable text and never becomes an SVG.
+   Do not "optimise" that unicode range later. Target ~46 KB. */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 400 600;
+  font-stretch: 85% 112%;
+  font-display: swap;
+  src: url("/fonts/archivo-latin.woff2") format("woff2");
+}
+
+/* Metric-matched fallbacks. Without these, font-display:swap reflows the
+   176px display line at the LCP moment. Re-measure with a real overlay
+   before shipping; these are calibrated against Arial. */
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local("Arial");
+  size-adjust: 96%; ascent-override: 92%; descent-override: 24%; line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  size-adjust: 107%; ascent-override: 90%; descent-override: 22%; line-gap-override: 0%;
+}
+
 @layer base {
   :root {
-    --background: 40 14% 97%;
-    --foreground: 0 0% 10%;
-    --card: 40 14% 97%;
-    --card-foreground: 0 0% 10%;
-    --popover: 40 14% 97%;
-    --popover-foreground: 0 0% 10%;
-    --primary: 0 0% 10%;
-    --primary-foreground: 40 14% 97%;
-    --secondary: 40 7% 93%;
-    --secondary-foreground: 0 0% 10%;
-    --muted: 40 7% 93%;
-    --muted-foreground: 40 2% 46%;
-    --accent: 33 18% 82%;
-    --accent-foreground: 0 0% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 40 6% 90%;
-    --input: 40 6% 90%;
-    --ring: 0 0% 10%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.25rem;
-    --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-}
+    /* ── 2. SHADCN LAYER — names unchanged, values retuned ──────────── */
+    --background: 43 35% 92%;      /* o29 bone      */
+    --foreground: 48 10% 10%;      /* o29 ink       */
+    --card: 43 35% 92%;
+    --card-foreground: 48 10% 10%;
+    --popover: 43 35% 92%;
+    --popover-foreground: 48 10% 10%;
+    --primary: 48 10% 10%;         /* ink fill      */
+    --primary-foreground: 43 35% 92%;
+    --secondary: 42 30% 87%;       /* o29 bone-2    */
+    --secondary-foreground: 48 10% 10%;
+    --muted: 42 30% 87%;
+    --muted-foreground: 46 9% 35%; /* o29 slate     */
+    --accent: 42 30% 87%;          /* hover SURFACE — never ochre */
+    --accent-foreground: 48 10% 10%;
+    --destructive: 11 70% 41%;     /* o29 vermilion */
+    --destructive-foreground: 43 35% 92%;
+    --border: 42 24% 81%;          /* o29 rule  — decorative hairline */
+    --input: 41 12% 46%;           /* o29 edge  — functional 3.66:1  */
+    --ring: 48 10% 10%;
+    --radius: 0rem;                /* square everything, one line     */
+    --chart-1: 224 68% 33%; --chart-2: 11 70% 41%; --chart-3: 39 75% 56%;
+    --chart-4: 70 26% 22%;  --chart-5: 46 9% 35%;
+    /* sidebar-* block from the old file may be deleted; nothing reads it */
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+    /* ── 3. FONT STACKS ─────────────────────────────────────────────── */
+    --font-body:    'Inter','Inter Fallback',ui-sans-serif,system-ui,sans-serif;
+    --font-heading: 'Inter','Inter Fallback',ui-sans-serif,system-ui,sans-serif;
+    --font-display: 'Archivo','Archivo Fallback','Inter',ui-sans-serif,sans-serif;
+    --font-mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+
+    /* ── 4. ØBJECT 29 PALETTE — HSL channel triplets ────────────────── */
+    --o29-bone:      43 35% 92%;   /* #F2EEE3  the room. every page starts here */
+    --o29-bone-2:    42 30% 87%;   /* #E8E2D4  the mat well behind every artwork */
+    --o29-rule:      42 24% 81%;   /* #DAD3C3  decorative hairline ONLY          */
+    --o29-edge:      41 12% 46%;   /* #837A67  functional control border 3.66:1  */
+    --o29-slate:     46 9% 35%;    /* #615E51  the ONE muted text value          */
+    --o29-ink:       48 10% 10%;   /* #1C1B17  all primary type + primary fill   */
+    --o29-cobalt:   224 68% 33%;   /* #1B398D  structural ink                    */
+    --o29-vermilion: 11 70% 41%;   /* #B23A1F  emotional ink                     */
+    --o29-ochre:     39 75% 56%;   /* #E3A83B  micro-mark only, never a field    */
+    --o29-olive:     70 26% 22%;   /* #42472A  /about ground ONLY                */
+    --o29-sky:      223 23% 73%;   /* #AAB3CA  auth shell + 404 ONLY             */
+
+    /* ── 5. TYPE SCALE (360 → 1440px) ───────────────────────────────── */
+    --t-meta:    0.6875rem;                                        /* 11px fixed */
+    --t-xs:      0.75rem;                                          /* 12px fixed */
+    --t-sm:      0.875rem;                                         /* 14px fixed */
+    --t-base:    clamp(0.9375rem, 0.8958rem + 0.185vw, 1.0625rem); /* 15 → 17    */
+    --t-lead:    clamp(1.125rem,  1.0417rem + 0.370vw, 1.375rem);  /* 18 → 22    */
+    --t-h3:      clamp(1.25rem,   1.1250rem + 0.556vw, 1.625rem);  /* 20 → 26    */
+    --t-h2:      clamp(1.75rem,   1.3333rem + 1.852vw, 3rem);      /* 28 → 48    */
+    --t-h1:      clamp(2.5rem,    1.5000rem + 4.444vw, 5.5rem);    /* 40 → 88    */
+    --t-display: clamp(3.5rem,    1.0000rem + 11.111vw, 11rem);    /* 56 → 176   */
+    --t-mega:    clamp(6rem,      1.3333rem + 20.741vw, 22rem);    /* 96 → 352   */
+
+    --lh-mega: .78;  --lh-display: .86; --lh-h1: .92; --lh-h2: 1;
+    --lh-h3: 1.2;    --lh-lead: 1.45;   --lh-body: 1.6; --lh-meta: 1;
+    --tr-mega: -.05em; --tr-display: -.035em; --tr-h1: -.028em;
+    --tr-h2: -.02em;   --tr-h3: -.01em;       --tr-body: 0; --tr-meta: .18em;
+
+    /* ── 6. SPACE / GRID ────────────────────────────────────────────── */
+    --page-max: 1600px;
+    --gutter:      clamp(1.25rem, 0.3333rem + 4.074vw, 4rem);   /*  20 →  64 */
+    --space-tight: clamp(3rem,   2rem      + 4.444vw, 6rem);    /*  48 →  96 */
+    --space-quiet: clamp(6rem,   4rem      + 8.889vw, 12rem);   /*  96 → 192 */
+    --space-hold:  clamp(9rem,   6rem      + 13.333vw, 18rem);  /* 144 → 288 */
+    --header-h: 3.5rem;
+    --hit: 2.75rem;                 /* 44px — the tap-target floor */
+
+    /* ── 7. MOTION ──────────────────────────────────────────────────── */
+    --ease-room:    cubic-bezier(.22,.61,.36,1);
+    --ease-shift:   cubic-bezier(.65,0,.35,1);
+    --ease-curtain: cubic-bezier(.83,0,.17,1);
+    --dur-instant: 90ms;  --dur-shift: 220ms; --dur-curtain: 420ms;
+    --dur-reveal: 620ms;  --dur-scale: 900ms; --stagger: 70ms;
+    --shift-y: 3px;       --shift-rot: .3deg;
   }
 
-  body {
-    @apply bg-[#F9F9F7] text-[#1A1A1A] font-body antialiased;
+  @media (min-width: 768px) { :root { --header-h: 5rem; } }
+
+  /* ── 8. COLOUR-FIELD MECHANISM ─────────────────────────────────────
+     Put .o29-field--x on a <section>, or on a PAGE ROOT div to invert the
+     whole page including the fixed <header> (Navbar is a DOM descendant of
+     that div in every page, so these custom properties inherit into it).
+     KEEP IT THAT WAY: if Navbar is ever hoisted above <Routes> into a
+     shared layout, every colour page silently loses its inverted chrome. */
+  :root, .o29-field--bone {
+    --bg: hsl(var(--o29-bone));      --fg: hsl(var(--o29-ink));
+    --fg-muted: hsl(var(--o29-slate));
+    --hairline: hsl(var(--o29-rule)); --control: hsl(var(--o29-edge));
+    --focus: hsl(var(--o29-ink));     --mark: hsl(var(--o29-rule));
   }
+  .o29-field--ink {
+    --bg: hsl(var(--o29-ink));       --fg: hsl(var(--o29-bone));
+    --fg-muted: hsl(var(--o29-rule));
+    --hairline: hsl(var(--o29-rule) / .38); --control: hsl(var(--o29-bone));
+    --focus: hsl(var(--o29-bone));   --mark: hsl(var(--o29-ochre));
+  }
+  .o29-field--cobalt {
+    --bg: hsl(var(--o29-cobalt));    --fg: hsl(var(--o29-bone));
+    --fg-muted: hsl(var(--o29-rule));
+    --hairline: hsl(var(--o29-rule) / .45); --control: hsl(var(--o29-bone));
+    --focus: hsl(var(--o29-bone));   --mark: hsl(var(--o29-bone) / .14);
+  }
+  /* vermilion: bone is the ONLY legible foreground. Secondary text is
+     differentiated by weight and size, NEVER by opacity — bone at 75%
+     over vermilion drops under 4.5:1. */
+  .o29-field--vermilion {
+    --bg: hsl(var(--o29-vermilion)); --fg: hsl(var(--o29-bone));
+    --fg-muted: hsl(var(--o29-bone));
+    --hairline: hsl(var(--o29-rule) / .55); --control: hsl(var(--o29-bone));
+    --focus: hsl(var(--o29-bone));   --mark: hsl(var(--o29-bone) / .12);
+  }
+  .o29-field--olive {
+    --bg: hsl(var(--o29-olive));     --fg: hsl(var(--o29-bone));
+    --fg-muted: hsl(var(--o29-rule));
+    --hairline: hsl(var(--o29-rule) / .4); --control: hsl(var(--o29-bone));
+    --focus: hsl(var(--o29-bone));   --mark: hsl(var(--o29-bone) / .12);
+  }
+  .o29-field--sky {
+    --bg: hsl(var(--o29-sky));       --fg: hsl(var(--o29-ink));
+    --fg-muted: hsl(var(--o29-ink)); /* slate is 3.10:1 on sky — forbidden */
+    --hairline: hsl(var(--o29-ink) / .3);  --control: hsl(var(--o29-ink));
+    --focus: hsl(var(--o29-ink));    --mark: hsl(var(--o29-ink) / .1);
+  }
+  .o29-field { background-color: var(--bg); color: var(--fg); }
+
+  /* ── 9. BASE ───────────────────────────────────────────────────────── */
+  * { @apply border-border; }
 
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* NEVER overflow-x:hidden here — it creates a scroll container and
+       silently breaks position:sticky (PDP buy column, Shop filter rule). */
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    overflow-x: clip;               /* clip does NOT break sticky */
+    font-family: var(--font-body);
+    font-size: var(--t-base);
+    line-height: var(--lh-body);
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
   }
 
-  ::selection {
-    background-color: #D9D2C5;
-    color: #1A1A1A;
+  h1, h2, .o29-display {
+    font-family: var(--font-display);
+    font-weight: 500;               /* 300 is banned system-wide */
+    text-wrap: balance;
+    hyphens: none;
+  }
+  p { text-wrap: pretty; }
+
+  /* The signature small type. The negative inline-end margin cancels the
+     trailing letter-space so the optical right edge lands on the grid. */
+  .o29-meta {
+    font-family: var(--font-body);
+    font-size: var(--t-meta);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tr-meta);
+    line-height: var(--lh-meta);
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
+    margin-inline-end: -0.18em;
   }
 
-  :focus-visible {
-    outline: 2px solid #1A1A1A;
-    outline-offset: 2px;
+  .o29-hit { min-height: var(--hit); min-width: var(--hit); }
+
+  ::selection { background-color: hsl(var(--o29-ochre)); color: hsl(var(--o29-ink)); }
+
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: hsl(var(--o29-bone)); }
+  ::-webkit-scrollbar-thumb { background: hsl(var(--o29-edge)); border-radius: 0; }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--o29-ink)); }
+}
+
+/* ── 10. KEYFRAMES ──────────────────────────────────────────────────── */
+@keyframes heart-pop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+.animate-heart-pop { animation: heart-pop var(--dur-shift) var(--ease-shift); }
+
+/* the loading indicator: a 1px ink rule sweeping the container. Not a spinner. */
+@keyframes rule-sweep { 0% { transform: scaleX(0); transform-origin: left; }
+  50% { transform: scaleX(1); transform-origin: left; }
+  51% { transform: scaleX(1); transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; } }
+
+.animate-in { animation-duration: var(--dur-curtain); animation-fill-mode: both; }
+
+/* ── 11. REDUCED MOTION — reverses commit 0c817d7, deliberately ─────── */
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 1ms; --dur-shift: 1ms; --dur-curtain: 1ms;
+    --dur-reveal: 1ms;  --dur-scale: 1ms; --stagger: 0ms;
+    --shift-y: 0px;     --shift-rot: 0deg;
   }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;    /* 1ms, not 0 — transitionend and */
+    animation-iteration-count: 1 !important; /* measured max-height still fire */
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  html { scroll-behavior: auto; }
 }
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #F9F9F7;
-}
-::-webkit-scrollbar-thumb {
-  background: #D9D2C5;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #6B6B67;
-}
-
-/* Smooth page transitions */
-.animate-in {
-  animation-duration: 0.3s;
-  animation-fill-mode: both;
-}
-
-/* Heart pop animation */
-@keyframes heart-pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
-
-.animate-heart-pop {
-  animation: heart-pop 0.35s ease-out;
-}
-

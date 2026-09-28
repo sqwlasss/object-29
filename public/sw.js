@@ -1,4 +1,7 @@
-const CACHE = "ddouble-shell-v1";
+// Bumped for the ØBJECT 29 rebrand. This MUST change whenever index.html
+// changes: the fetch handler falls back to the cached shell, so a returning
+// visitor would otherwise keep being served the previous brand's HTML.
+const CACHE = "o29-shell-v2";
 const SHELL = ["/", "/index.html"];
 
 self.addEventListener("install", (e) => {

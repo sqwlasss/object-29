@@ -57,7 +57,18 @@ export function onAuthChange(callback) {
       });
     })
     .catch(() => {
-      // Firebase failed to load — leave unsubscribed.
+      // Firebase failed to load or initialise — commonly an ad/tracker blocker
+      // blocking a googleapis.com endpoint, but also an outage, an offline
+      // visitor, or a misconfigured key.
+      //
+      // Resolve to "signed out" instead of staying silent. AuthContext only
+      // clears `isLoadingAuth` from inside this callback, and App.jsx renders
+      // nothing but a spinner while that flag is true — so swallowing the
+      // failure here used to take the ENTIRE STOREFRONT down: no catalogue, no
+      // product pages, no cart, for a visitor whose only crime was running
+      // uBlock. Browsing and buying do not require auth, so degrade to
+      // logged-out and let the shop render.
+      if (!cancelled) callback(null);
     });
   return () => {
     cancelled = true;

@@ -1,9 +1,7 @@
 // src/lib/analytics.js
-const GA_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+import { consentGranted } from "@/lib/consent";
 
-function consentGranted() {
-  return localStorage.getItem("ddouble_consent") === "accepted";
-}
+const GA_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
 
 export function initAnalytics() {
   if (!GA_ID || !consentGranted() || typeof window === "undefined") return;

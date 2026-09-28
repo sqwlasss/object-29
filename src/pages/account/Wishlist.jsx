@@ -39,7 +39,7 @@ export default function Wishlist() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 className="w-6 h-6 animate-spin text-[#6B6B67]" />
+        <Loader2 className="w-6 h-6 animate-spin text-o29-slate" />
       </div>
     );
   }
@@ -47,12 +47,12 @@ export default function Wishlist() {
   if (wishlistProducts.length === 0) {
     return (
       <div className="text-center py-16">
-        <Heart size={40} className="mx-auto text-[#D9D2C5] mb-4" />
-        <h2 className="text-xl font-light text-[#1A1A1A] mb-2">Your wishlist is empty</h2>
-        <p className="text-sm text-[#6B6B67] mb-6">Save your favorite prints by tapping the heart icon.</p>
+        <Heart size={40} className="mx-auto text-o29-rule mb-4" />
+        <h2 className="font-display text-h3 font-medium text-o29-ink mb-2">Your wishlist is empty</h2>
+        <p className="text-sm text-o29-slate mb-6">Save your favorite prints by tapping the heart icon.</p>
         <button
           onClick={() => navigate("/shop")}
-          className="text-xs uppercase tracking-[0.1em] underline underline-offset-4 text-[#1A1A1A]"
+          className="text-xs uppercase tracking-[0.1em] underline underline-offset-4 text-o29-ink"
         >
           Browse Shop
         </button>
@@ -62,7 +62,7 @@ export default function Wishlist() {
 
   return (
     <div>
-      <h2 className="text-lg font-medium text-[#1A1A1A] mb-6">
+      <h2 className="text-lg font-medium text-o29-ink mb-6">
         Wishlist ({wishlistProducts.length})
       </h2>
 
@@ -73,7 +73,7 @@ export default function Wishlist() {
             to={`/product/${product.handle}`}
             className="group block"
           >
-            <div className="relative overflow-hidden bg-[#F1F0EC]">
+            <div className="relative overflow-hidden bg-o29-bone-2">
               <img
                 src={shopifyImage(product.image, 600)}
                 alt={product.title}
@@ -82,15 +82,15 @@ export default function Wishlist() {
               />
               <button
                 onClick={(e) => handleRemove(product, e)}
-                className="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute bottom-0 right-0 flex h-hit w-hit items-center justify-center text-o29-ink opacity-100 transition-opacity duration-instant md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
                 aria-label="Remove from wishlist"
               >
-                <X size={14} className="text-[#1A1A1A]" />
+                <X size={14} className="text-o29-ink" />
               </button>
             </div>
             <div className="mt-3 space-y-1">
-              <h3 className="text-sm font-medium text-[#1A1A1A] tracking-wide">{product.title}</h3>
-              <p className="text-sm text-[#6B6B67]">From <Price amount={product.price} /></p>
+              <h3 className="text-sm font-medium text-o29-ink tracking-wide">{product.title}</h3>
+              <p className="text-sm text-o29-slate">From <Price amount={product.price} /></p>
             </div>
           </Link>
         ))}

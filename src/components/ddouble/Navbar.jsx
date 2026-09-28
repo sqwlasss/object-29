@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, ShoppingBag, Heart, User, Menu, X, ChevronDown } from "lucide-react";
+import { Search, Heart, User, Menu, X, ChevronDown } from "lucide-react";
 import { useShopifyCart } from "@/hooks/useShopifyCart";
 import { useAuth } from "@/lib/AuthContext";
 import { useFavorites } from "@/lib/FavoritesContext";
@@ -13,6 +13,28 @@ import { shopifyImage } from "@/lib/utils";
 import useEscapeClose from "@/hooks/useEscapeClose";
 import usePanelFocus from "@/hooks/usePanelFocus";
 
+/**
+ * The header.
+ *
+ * Three structural changes from the previous version, all of them fixes:
+ *
+ *  1. THE WORDMARK IS IN THE GRID. It used to be
+ *     `absolute left-[45%] -translate-x-1/2`, which collided with the nav
+ *     links at some viewport widths (and had already been patched once for
+ *     mobile). A three-column grid cannot overlap at any width.
+ *
+ *  2. NO BACKDROP BLUR. The scrolled state was `bg-…/85 backdrop-blur-xl`.
+ *     Glassmorphism is out of the system; the header now goes to a solid
+ *     field ground with a hairline under it.
+ *
+ *  3. COLOURS COME FROM THE FIELD. Every colour here is `--fg` / `--bg` /
+ *     `--hairline`, so putting `.o29-field--cobalt` on a page root inverts the
+ *     whole header for free. This works because this fixed <header> renders
+ *     INSIDE each page's root div — do not hoist it above <Routes>.
+ *
+ * Contact and FAQ moved out of the top bar to keep it uncluttered; both are
+ * still linked in the footer and reachable by URL.
+ */
 const NAV_LINKS = [
   { label: "Shop", path: "/shop" },
   {
@@ -26,8 +48,6 @@ const NAV_LINKS = [
     ],
   },
   { label: "About", path: "/about" },
-  { label: "Contact", path: "/contact" },
-  { label: "FAQ", path: "/faq" },
 ];
 
 export default function Navbar() {
@@ -54,7 +74,7 @@ export default function Navbar() {
   const navLinks = useMemo(() => {
     if (!collections || collections.length === 0) return NAV_LINKS;
     return NAV_LINKS.map((link) =>
-      link.label === "Collections"
+      link.children
         ? {
             ...link,
             children: collections.map((c) => ({
@@ -149,32 +169,38 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [searchOpen]);
 
+  const navLinkClass =
+    "o29-meta text-field-fg transition-opacity duration-instant hover:opacity-60";
+
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-[#F9F9F7]/85 backdrop-blur-xl shadow-[0_1px_0_0_#E5E5E1]"
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-curtain ${
+          scrolled || searchOpen || mobileOpen
+            ? "bg-field shadow-[0_1px_0_0_var(--hairline)]"
             : "bg-transparent"
         }`}
       >
-        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:bg-[#1A1A1A] focus:text-white focus:px-4 focus:py-2 text-xs uppercase tracking-[0.15em]">
+        <a
+          href="#main"
+          className="o29-meta sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-[100] focus:bg-o29-ink focus:px-4 focus:py-2 focus:text-o29-bone"
+        >
           Skip to content
         </a>
-        <nav className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Left: mobile menu + desktop nav */}
-            <div className="flex items-center gap-8 flex-1">
-              <button
-                onClick={toggleMobileMenu}
-                className="lg:hidden min-w-11 min-h-11 flex items-center justify-center"
-                aria-label="Menu"
-                aria-expanded={mobileOpen}
-              >
-                {mobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
-              </button>
+        <nav className="mx-auto w-full max-w-page px-gutter">
+          {/* Three columns: the wordmark can never collide with the links. */}
+          <div className="grid h-header grid-cols-[auto_1fr_auto] items-center gap-4">
+            {/* Left: wordmark */}
+            <Link
+              to="/"
+              className="flex min-h-hit items-center font-display text-sm font-medium tracking-[0.12em] text-field-fg md:text-base"
+              aria-label="ØBJECT 29 — home"
+            >
+              ØBJECT&nbsp;29
+            </Link>
 
-              <div className="hidden lg:flex items-center gap-8">
+            {/* Centre: desktop nav */}
+            <div className="hidden items-center gap-8 justify-self-center lg:flex">
               {navLinks.map((link) =>
                 link.children ? (
                   <div
@@ -187,20 +213,20 @@ export default function Navbar() {
                   >
                     <button
                       onClick={() => setMegaOpen(!megaOpen)}
-                      className="text-[11px] uppercase tracking-[0.12em] text-[#1A1A1A] hover:text-[#6B6B67] transition-colors"
+                      className={navLinkClass}
                       aria-haspopup="true"
                       aria-expanded={megaOpen}
                     >
                       {link.label}
                     </button>
                     {megaOpen && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4">
-                        <div className="bg-white/95 backdrop-blur-xl border border-[#E5E5E1] rounded-none p-6 min-w-[200px] shadow-[0_8px_40px_rgba(0,0,0,0.03)]">
+                      <div className="absolute left-1/2 top-full -translate-x-1/2 pt-4">
+                        <div className="o29-field o29-field--bone min-w-[220px] border border-hairline p-6">
                           {link.children.map((child) => (
                             <Link
                               key={child.label}
                               to={child.path}
-                              className="block py-2 text-[12px] tracking-[0.05em] text-[#6B6B67] hover:text-[#1A1A1A] transition-colors"
+                              className="block py-2 text-sm text-o29-slate transition-colors duration-instant hover:text-o29-ink"
                             >
                               {child.label}
                             </Link>
@@ -210,35 +236,22 @@ export default function Navbar() {
                     )}
                   </div>
                 ) : (
-                  <Link
-                    key={link.label}
-                    to={link.path}
-                    className="text-[11px] uppercase tracking-[0.12em] text-[#1A1A1A] hover:text-[#6B6B67] transition-colors"
-                  >
+                  <Link key={link.label} to={link.path} className={navLinkClass}>
                     {link.label}
                   </Link>
                 )
               )}
-              </div>
             </div>
 
-            {/* Logo */}
-            <Link
-              to="/"
-              className="absolute left-[33%] md:left-[42%] lg:left-[45%] -translate-x-1/2 text-xl md:text-2xl font-semibold tracking-[0.08em] text-[#1A1A1A]"
-            >
-              DDOUBLE
-            </Link>
-
-            {/* Right: icons */}
-            <div className="flex items-center gap-1 md:gap-5 flex-1 justify-end">
+            {/* Right: actions */}
+            <div className="flex items-center justify-end gap-1 md:gap-4">
               <div className="hidden md:block">
                 <CurrencySelector />
               </div>
               <button
                 ref={searchToggleRef}
                 onClick={toggleSearch}
-                className="min-w-11 min-h-11 flex items-center justify-center text-[#1A1A1A] hover:text-[#6B6B67] transition-colors"
+                className="o29-hit flex items-center justify-center text-field-fg transition-opacity duration-instant hover:opacity-60"
                 aria-label="Search"
                 aria-expanded={searchOpen}
               >
@@ -246,57 +259,54 @@ export default function Navbar() {
               </button>
               <Link
                 to="/favorites"
-                className="relative min-w-11 min-h-11 flex items-center justify-center text-[#1A1A1A] hover:text-[#6B6B67] transition-colors"
-                aria-label="Favorites"
+                className="o29-hit relative hidden items-center justify-center text-field-fg transition-opacity duration-instant hover:opacity-60 md:flex"
+                aria-label={favoritesCount > 0 ? `Favorites, ${favoritesCount} saved` : "Favorites"}
               >
                 <Heart size={18} aria-hidden="true" />
                 {favoritesCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#1A1A1A] text-white text-xs rounded-full flex items-center justify-center">
+                  <span className="o29-meta absolute right-1 top-1 tabular-nums text-field-fg">
                     {favoritesCount}
                   </span>
                 )}
               </Link>
-              {isAuthenticated ? (
-                <Link
-                  to="/account"
-                  className="min-w-11 min-h-11 flex items-center justify-center text-[#1A1A1A] hover:text-[#6B6B67] transition-colors"
-                  aria-label="Account"
-                >
-                  <User size={18} aria-hidden="true" />
-                </Link>
-              ) : (
-                <Link
-                  to="/login"
-                  className="min-w-11 min-h-11 flex items-center justify-center text-[#1A1A1A] hover:text-[#6B6B67] transition-colors"
-                  aria-label="Log in"
-                >
-                  <User size={18} aria-hidden="true" />
-                </Link>
-              )}
+              <Link
+                to={isAuthenticated ? "/account" : "/login"}
+                className="o29-hit hidden items-center justify-center text-field-fg transition-opacity duration-instant hover:opacity-60 md:flex"
+                aria-label={isAuthenticated ? "Account" : "Log in"}
+              >
+                <User size={18} aria-hidden="true" />
+              </Link>
+              {/* The cart is words, not a bag: it is the one control that must
+                  never be ambiguous, and the count reads at a glance. */}
               <button
                 onClick={() => setCartOpen(true)}
-                className="relative min-w-11 min-h-11 flex items-center justify-center text-[#1A1A1A] hover:text-[#6B6B67] transition-colors"
-                aria-label="Cart"
+                className="o29-meta o29-hit flex items-center justify-center whitespace-nowrap px-1 text-field-fg tabular-nums transition-opacity duration-instant hover:opacity-60"
+                aria-label={`Cart, ${totalItems} ${totalItems === 1 ? "item" : "items"}`}
               >
-                <ShoppingBag size={18} aria-hidden="true" />
-                {totalItems > 0 && (
-                  <span aria-live="polite" className="absolute -top-1 -right-1 w-5 h-5 bg-[#1A1A1A] text-white text-xs rounded-full flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
+                <span aria-hidden="true">
+                  Cart (<span aria-live="polite">{totalItems}</span>)
+                </span>
+              </button>
+              <button
+                onClick={toggleMobileMenu}
+                className="o29-hit flex items-center justify-center text-field-fg lg:hidden"
+                aria-label="Menu"
+                aria-expanded={mobileOpen}
+              >
+                {mobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
               </button>
             </div>
           </div>
 
           {/* Search bar */}
           {searchOpen && (
-            <div ref={searchPanelRef} className="border-t border-[#E5E5E1] py-4 relative">
+            <div ref={searchPanelRef} className="relative border-t border-hairline py-4">
               <div className="flex items-center gap-3">
-                <Search size={16} aria-hidden="true" className="text-[#6B6B67] shrink-0" />
+                <Search size={16} aria-hidden="true" className="shrink-0 text-field-muted" />
                 <input
                   type="text"
-                  placeholder="Search for posters..."
-                  className="w-full bg-transparent text-sm text-[#1A1A1A] placeholder:text-[#6B6B67] outline-none"
+                  placeholder="Search the collection…"
+                  className="w-full bg-transparent text-sm text-field-fg outline-none placeholder:text-field-muted"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="Search"
@@ -308,18 +318,25 @@ export default function Navbar() {
                   }}
                 />
                 {searchQuery && (
-                  <button onClick={() => setSearchQuery("")} className="min-w-11 min-h-11 flex items-center justify-center -m-2 text-[#6B6B67] hover:text-[#1A1A1A]" aria-label="Clear search">
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="o29-hit -m-2 flex items-center justify-center text-field-muted hover:text-field-fg"
+                    aria-label="Clear search"
+                  >
                     <X size={14} aria-hidden="true" />
                   </button>
                 )}
               </div>
-              {searchOpen && !searchQuery.trim() && (
-                <div className="mt-3 pt-3 border-t border-[#E5E5E1]">
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-[#5A5A56] mb-2">Popular searches</p>
+              {!searchQuery.trim() && (
+                <div className="mt-3 border-t border-hairline pt-3">
+                  <p className="o29-meta mb-2 text-field-muted">Popular searches</p>
                   <div className="flex flex-wrap gap-2">
                     {["Poster", "Rug", "Bedding"].map((term) => (
-                      <button key={term} onClick={() => setSearchQuery(term)}
-                        className="text-xs border border-[#E5E5E1] px-3 min-h-11 flex items-center justify-center hover:border-[#1A1A1A] transition-colors">
+                      <button
+                        key={term}
+                        onClick={() => setSearchQuery(term)}
+                        className="o29-hit flex items-center justify-center border border-control px-3 text-xs text-field-fg transition-colors duration-instant hover:bg-o29-bone-2"
+                      >
                         {term}
                       </button>
                     ))}
@@ -327,26 +344,37 @@ export default function Navbar() {
                 </div>
               )}
               {searchResults.length > 0 && (
-                <div className="mt-3 border-t border-[#E5E5E1] pt-3 space-y-2">
+                <div className="mt-3 space-y-2 border-t border-hairline pt-3">
                   {searchResults.map((product) => (
                     <Link
                       key={product.handle}
                       to={`/product/${product.handle}`}
                       onClick={closeSearch}
-                      className="flex items-center gap-3 py-2 hover:bg-[#F1F0EC] -mx-2 px-2 transition-colors"
+                      className="-mx-2 flex items-center gap-3 px-2 py-2 transition-colors duration-instant hover:bg-o29-bone-2"
                     >
-                      <img src={shopifyImage(product.image, 160)} alt={product.title} className="w-10 h-10 object-cover" />
-                      <div>
-                        <p className="text-sm text-[#1A1A1A]">{product.title}</p>
-                        <p className="text-xs text-[#5A5A56]"><Price amount={product.price} /></p>
-                      </div>
+                      <img
+                        src={shopifyImage(product.image, 160)}
+                        alt=""
+                        className="h-12 w-12 bg-o29-bone-2 object-contain"
+                        loading="lazy"
+                      />
+                      <span className="flex-1 text-sm text-field-fg">{product.title}</span>
+                      <span className="o29-meta tabular-nums text-field-muted">
+                        <Price amount={product.price} />
+                      </span>
                     </Link>
                   ))}
                 </div>
               )}
               {searchQuery.trim() && searchResults.length === 0 && (
-                <p className="mt-3 text-xs text-[#6B6B67]">
-                  No results for '{searchQuery}' — try <button onClick={() => setSearchQuery("Poster")} className="underline underline-offset-2 text-[#1A1A1A]">Poster</button>
+                <p className="mt-3 text-xs text-field-muted">
+                  No results for &lsquo;{searchQuery}&rsquo; — try{" "}
+                  <button
+                    onClick={() => setSearchQuery("Poster")}
+                    className="text-field-fg underline underline-offset-2"
+                  >
+                    Poster
+                  </button>
                 </p>
               )}
             </div>
@@ -358,65 +386,71 @@ export default function Navbar() {
           <div
             ref={mobileMenuRef}
             tabIndex={-1}
-            className="lg:hidden fixed left-0 right-0 bottom-0 top-16 md:top-20 bg-[#F9F9F7] border-t border-[#E5E5E1] overflow-y-auto overscroll-contain z-40"
+            className="o29-field o29-field--ink fixed inset-x-0 bottom-0 top-header z-40 overflow-y-auto overscroll-contain border-t border-hairline lg:hidden"
           >
-            <div className="px-6 py-6 space-y-4 min-h-full">
-              {navLinks.map((link) =>
-                link.children ? (
-                  <div key={link.label} className="space-y-2">
-                    <button
-                      onClick={() => setCollectionsOpen(!collectionsOpen)}
-                      className="flex items-center justify-between w-full min-h-11 text-xs uppercase tracking-[0.12em] text-[#6B6B67]"
-                    >
-                      {link.label}
-                      <ChevronDown size={14} aria-hidden="true" className={`transition-transform duration-200 ${collectionsOpen ? "rotate-180" : ""}`} />
-                    </button>
-                    <div
-                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                        collectionsOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
-                      }`}
-                    >
-                      <div className="pl-4 space-y-2 pt-1">
-                        {link.children.map((child) => (
-                          <Link
-                            key={child.label}
-                            to={child.path}
-                            className="flex items-center min-h-11 text-sm text-[#1A1A1A]"
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
+            <div className="min-h-full px-gutter py-8">
+              <div className="space-y-1">
+                {navLinks.map((link) =>
+                  link.children ? (
+                    <div key={link.label}>
+                      <button
+                        onClick={() => setCollectionsOpen(!collectionsOpen)}
+                        className="flex min-h-hit w-full items-center justify-between text-h3 text-field-fg"
+                        aria-expanded={collectionsOpen}
+                      >
+                        {link.label}
+                        <ChevronDown
+                          size={16}
+                          aria-hidden="true"
+                          className={`transition-transform duration-shift ${collectionsOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                      <div
+                        className={`overflow-hidden transition-all duration-curtain ${
+                          collectionsOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+                        }`}
+                      >
+                        <div className="space-y-1 pb-2 pl-4">
+                          {link.children.map((child) => (
+                            <Link
+                              key={child.label}
+                              to={child.path}
+                              className="flex min-h-hit items-center text-sm text-field-muted"
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <Link
-                    key={link.label}
-                    to={link.path}
-                    className="flex items-center min-h-11 text-xs uppercase tracking-[0.12em] text-[#1A1A1A]"
-                  >
-                    {link.label}
-                  </Link>
-                )
-              )}
-              <Link
-                to="/favorites"
-                className="flex items-center min-h-11 text-xs uppercase tracking-[0.12em] text-[#1A1A1A]"
-              >
-                Favorites
-              </Link>
-              <MobileCurrencySelector />
-              <div className="border-t border-[#E5E5E1] pt-4 mt-4">
-                {isAuthenticated ? (
-                  <Link to="/account" className="flex items-center min-h-11 text-xs uppercase tracking-[0.12em] text-[#1A1A1A]">
-                    My Account
-                  </Link>
-                ) : (
-                  <Link to="/login" className="flex items-center min-h-11 text-xs uppercase tracking-[0.12em] text-[#1A1A1A]">
-                    Log in
-                  </Link>
+                  ) : (
+                    <Link
+                      key={link.label}
+                      to={link.path}
+                      className="flex min-h-hit items-center text-h3 text-field-fg"
+                    >
+                      {link.label}
+                    </Link>
+                  )
                 )}
+                <Link to="/favorites" className="flex min-h-hit items-center text-h3 text-field-fg">
+                  Favorites{favoritesCount > 0 ? ` (${favoritesCount})` : ""}
+                </Link>
+                <Link
+                  to={isAuthenticated ? "/account" : "/login"}
+                  className="flex min-h-hit items-center text-h3 text-field-fg"
+                >
+                  {isAuthenticated ? "Account" : "Log in"}
+                </Link>
               </div>
+
+              <div className="mt-8 border-t border-hairline pt-6">
+                <MobileCurrencySelector />
+              </div>
+
+              <p className="o29-meta mt-12 text-field-muted">
+                ØBJECT 29 / Art for another reality
+              </p>
             </div>
           </div>
         )}

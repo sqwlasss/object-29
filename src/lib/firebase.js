@@ -19,9 +19,17 @@ export function initFirebase() {
     appPromise = (async () => {
       const { initializeApp } = await import('firebase/app');
       const app = initializeApp(firebaseConfig);
-      const { getAnalytics } = await import('firebase/analytics');
+      // Analytics is optional and is the single most commonly blocked part of
+      // Firebase — ad and tracker blockers routinely block its endpoints. It
+      // must never be able to reject this promise, because auth (and therefore
+      // whether the storefront renders at all) depends on it resolving.
       if (typeof window !== 'undefined') {
-        getAnalytics(app);
+        try {
+          const { getAnalytics } = await import('firebase/analytics');
+          getAnalytics(app);
+        } catch {
+          /* analytics unavailable — auth and the storefront continue */
+        }
       }
       return app;
     })();

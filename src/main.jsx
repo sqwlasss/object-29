@@ -1,3 +1,12 @@
+// Preview mode (`npm run dev:preview`) — MUST be the first import.
+//
+// The module self-installs a stand-in Storefront API so the storefront runs
+// without Shopify credentials. It has to evaluate before App.jsx, because
+// src/lib/shopify/client.js builds its client at module scope and the client
+// captures `fetch` at construction. Its body is guarded by
+// import.meta.env.DEV, so production builds drop it entirely.
+import '@/lib/dev/shopifyMock'
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from '@/App.jsx'

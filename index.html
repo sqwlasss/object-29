@@ -4,19 +4,22 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DDouble — Premium Wall Art</title>
-    <meta name="description" content="Premium wall art designed to elevate every room. Discover timeless, minimalist posters crafted for contemporary homes." />
-    <meta name="theme-color" content="#F9F9F7" />
-    <meta property="og:site_name" content="DDouble" />
-    <link
-      rel="preload"
-      as="image"
-      href="/assets/home-800.jpg"
-      imagesrcset="/assets/home-800.jpg 800w, /assets/home.jpg 1056w"
-      imagesizes="(max-width: 1023px) 100vw, 50vw"
-      fetchpriority="high"
-    />
+    <title>ØBJECT 29 — Art for another reality</title>
+    <meta name="description" content="Contemporary surreal art and wall art. Impossible rooms, oversized objects and altered realities, printed as collectible editions." />
+    <meta name="theme-color" content="#F2EEE3" />
+    <meta property="og:site_name" content="ØBJECT 29" />
+    <!--
+      No hero image is preloaded. The homepage hero is a CSS-painted room, so
+      the headline, composition, horizon and CTA all paint without waiting on
+      a network response; the single artwork inside it resolves from Shopify.
+
+      The previous build preloaded "/assets/home-800.jpg", which never existed
+      in production — Vite emits that import as /assets/home-800-<hash>.jpg, so
+      the preload 404'd on every page view. Stage 6 adds a real build-time
+      preload for the resolved hero artwork via scripts/generate-sitemap.mjs.
+    -->
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <div id="root"></div>

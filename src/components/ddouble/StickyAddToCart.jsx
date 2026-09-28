@@ -1,6 +1,17 @@
 import { useState, useEffect } from "react";
 import Price from "@/components/ddouble/Price";
 
+/**
+ * Mobile buy bar. Appears once the main Add to Cart scrolls out of view and
+ * hides again over the footer.
+ *
+ * Reuses `handleAddToCart` from the page — never its own handler — because
+ * that function carries the GA4 add_to_cart call.
+ *
+ * The safe-area padding is not cosmetic: without it this bar sits under the
+ * home indicator on a notched phone and the primary buy button is partially
+ * untappable.
+ */
 export default function StickyAddToCart({
   product,
   selectedVariant,
@@ -43,29 +54,29 @@ export default function StickyAddToCart({
 
   return (
     <div
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-      className={`fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#E5E5E1] shadow-[0_-4px_20px_rgba(0,0,0,0.04)] transition-transform duration-300 md:hidden ${
+      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+      className={`o29-field o29-field--bone fixed inset-x-0 bottom-0 z-50 border-t border-hairline transition-transform duration-curtain ease-curtain md:hidden ${
         visible && !footerVisible ? "translate-y-0" : "translate-y-full"
       }`}
+      aria-hidden={!(visible && !footerVisible)}
     >
-      <div className="flex items-center gap-3 px-4 py-3 max-w-[1440px] mx-auto">
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[#1A1A1A] truncate">
-            {product?.title}
-          </p>
+      <div className="mx-auto flex max-w-page items-center gap-3 px-gutter pt-3">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-o29-ink">{product?.title}</p>
           {variantLabel && (
-            <p className="text-xs text-[#6B6B67] mt-0.5 truncate">{variantLabel}</p>
+            <p className="o29-meta mt-0.5 truncate text-o29-slate">{variantLabel}</p>
           )}
-          <p className="text-sm text-[#1A1A1A] mt-0.5">
+          <p className="mt-0.5 text-sm tabular-nums text-o29-ink">
             <Price amount={displayPrice} />
           </p>
         </div>
         <button
           onClick={handleAddToCart}
           disabled={cartLoading}
-          className="shrink-0 min-h-11 flex items-center justify-center bg-[#1A1A1A] text-white text-xs uppercase tracking-[0.15em] px-6 py-3 hover:bg-[#2A2A2A] transition-all duration-300 disabled:opacity-50"
+          tabIndex={visible && !footerVisible ? 0 : -1}
+          className="o29-meta o29-hit shrink-0 bg-o29-ink px-6 text-o29-bone transition-colors duration-instant hover:bg-o29-cobalt disabled:bg-o29-bone-2 disabled:text-o29-slate"
         >
-          {cartLoading ? "Adding..." : needsSelection ? "Select Options" : "Add to Cart"}
+          {cartLoading ? "Adding…" : needsSelection ? "Select options" : "Add to cart"}
         </button>
       </div>
     </div>

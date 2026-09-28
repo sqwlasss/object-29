@@ -39,33 +39,33 @@ export default function Profile() {
 
   return (
     <div>
-      <h2 className="text-lg font-medium text-[#1A1A1A] mb-6">Profile</h2>
+      <h2 className="text-lg font-medium text-o29-ink mb-6">Profile</h2>
 
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-[#6B6B67]" />
+          <Loader2 className="w-6 h-6 animate-spin text-o29-slate" />
         </div>
       ) : (
         <form onSubmit={handleSave} className="space-y-6 max-w-lg">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" />
               <Input
                 id="email"
                 value={customer?.email || firebaseUser?.email || ""}
                 disabled
-                className="pl-10 h-11 bg-[#F1F0EC]"
+                className="pl-10 h-11 bg-o29-bone-2"
               />
             </div>
-            <p className="text-[11px] text-[#6B6B67]">Email cannot be changed.</p>
+            <p className="text-[11px] text-o29-slate">Email cannot be changed.</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName">First name</Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" />
                 <Input
                   id="firstName"
                   value={firstName}
@@ -90,7 +90,7 @@ export default function Profile() {
           <div className="space-y-2">
             <Label htmlFor="phone">Phone</Label>
             <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" />
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" />
               <Input
                 id="phone"
                 type="tel"

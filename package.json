@@ -6,11 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --quiet",
+    "lint": "eslint . --quiet && node scripts/check-design-system.mjs",
     "lint:fix": "eslint . --fix",
+    "check:ds": "node scripts/check-design-system.mjs --verbose",
     "typecheck": "tsc -p ./jsconfig.json",
     "preview": "vite preview",
-    "sitemap": "node scripts/generate-sitemap.mjs"
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "dev:preview": "vite --mode preview",
+    "check:env": "node scripts/check-env.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.2",
@@ -24,7 +27,6 @@
     "clsx": "^2.1.1",
     "dompurify": "^3.4.14",
     "firebase": "^12.16.0",
-    "input-otp": "^1.4.2",
     "lucide-react": "^0.475.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

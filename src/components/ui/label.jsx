@@ -4,8 +4,16 @@ import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Form labels use the system's metadata treatment — 11px, uppercase, .18em —
+ * so a field label and an editorial caption are visibly the same voice.
+ *
+ * `text-field-muted` resolves through whatever colour field the label sits in,
+ * so the same component is legible on bone, on the sky auth shell, and inside
+ * an ink panel without a single conditional.
+ */
 const labelVariants = cva(
-  "text-[11px] uppercase tracking-[0.15em] leading-none text-[#5A5A56] peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+  "o29-meta text-field-muted leading-none peer-disabled:cursor-not-allowed peer-disabled:text-o29-slate"
 )
 
 const Label = React.forwardRef(({ className, ...props }, ref) => (

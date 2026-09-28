@@ -42,12 +42,12 @@ export default function ResetPassword() {
         title="Invalid reset link"
         subtitle="This password reset link is missing or invalid"
         footer={
-          <Link to="/forgot-password" className="text-[#1A1A1A] font-medium hover:underline">
+          <Link to="/forgot-password" className="text-o29-ink font-medium hover:underline">
             Request a new link
           </Link>
         }
       >
-        <p className="text-sm text-[#1A1A1A] text-center">
+        <p className="text-sm text-o29-ink text-center">
           The link you used appears to be incomplete. Please request a new password reset email.
         </p>
       </AuthLayout>
@@ -61,7 +61,7 @@ export default function ResetPassword() {
       subtitle="Enter your new password below"
     >
       {error && (
-        <div className="mb-4 p-3 rounded-none border border-[#E5E5E1] bg-[#F1F0EC] text-[#1A1A1A] text-sm">
+        <div className="mb-4 p-3 rounded-none border border-o29-rule bg-o29-bone-2 text-o29-ink text-sm">
           {error}
         </div>
       )}
@@ -69,7 +69,7 @@ export default function ResetPassword() {
         <div className="space-y-2">
           <Label htmlFor="password">New Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" aria-hidden="true" />
             <Input
               id="password"
               type="password"
@@ -86,7 +86,7 @@ export default function ResetPassword() {
         <div className="space-y-2">
           <Label htmlFor="confirm">Confirm Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6B67]" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-o29-slate" aria-hidden="true" />
             <Input
               id="confirm"
               type="password"

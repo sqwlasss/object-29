@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-const CONSENT_KEY = "ddouble_consent";
+import { CONSENT_KEY } from "@/lib/consent";
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
@@ -18,17 +17,28 @@ export default function CookieConsent() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-[70] bg-[#1A1A1A] text-[#F9F9F7] px-6 py-4">
-      <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row items-start md:items-center gap-4 justify-between">
-        <p className="text-xs leading-relaxed max-w-xl">
-          We use cookies to improve your experience and measure site usage. See our{" "}
+    <div
+      className="o29-field o29-field--ink fixed inset-x-0 bottom-0 z-[70] px-gutter py-4"
+      style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
+      role="region"
+      aria-label="Cookie consent"
+    >
+      <div className="mx-auto flex max-w-page flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+        <p className="max-w-reading text-sm text-field-fg">
+          We use cookies to measure site usage. See our{" "}
           <a href="/privacy" className="underline underline-offset-2">Privacy Policy</a>.
         </p>
-        <div className="flex gap-3 shrink-0">
-          <button onClick={() => decide("rejected")} className="text-xs uppercase tracking-[0.15em] border border-[#F9F9F7] px-5 py-2.5 hover:bg-[#F9F9F7] hover:text-[#1A1A1A] transition-colors">
+        <div className="flex shrink-0 gap-3">
+          <button
+            onClick={() => decide("rejected")}
+            className="o29-meta o29-hit border border-control px-5 text-field-fg transition-colors duration-instant hover:bg-field-fg hover:text-field"
+          >
             Reject
           </button>
-          <button onClick={() => decide("accepted")} className="text-xs uppercase tracking-[0.15em] bg-[#F9F9F7] text-[#1A1A1A] px-5 py-2.5 hover:bg-[#E5E5E1] transition-colors">
+          <button
+            onClick={() => decide("accepted")}
+            className="o29-meta o29-hit bg-field-fg px-5 text-field transition-opacity duration-instant hover:opacity-80"
+          >
             Accept
           </button>
         </div>

@@ -1,115 +1,107 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import Seo from "@/components/Seo";
 import Navbar from "@/components/ddouble/Navbar";
 import Footer from "@/components/ddouble/Footer";
-import FadeIn from "@/components/ddouble/FadeIn";
-import aboutImg from "../../assets/about-us.jpg";
+import Reveal from "@/components/motion/Reveal";
+import ColourField from "@/components/o29/ColourField";
+import MetaLabel from "@/components/o29/MetaLabel";
 
+/**
+ * The manifesto. Olive throughout — the only page in the site that uses it —
+ * with one full-bleed bone interruption, and a vermilion footer. Olive meeting
+ * vermilion across a hard edge is the relationship in the reference artworks,
+ * and this is the only place those two are allowed to touch.
+ *
+ * WHAT WAS DELETED, AND WHY
+ *
+ * The previous copy claimed a Copenhagen studio, museum-grade paper, archival
+ * inks, collaborations with artists across Europe, and fully sustainable
+ * packaging. None of it is verifiable from this repository, and a shop that
+ * invents its own provenance is doing the same thing as a shop that invents
+ * customer testimonials.
+ *
+ * What replaces it says only what the work is. If any of those production
+ * claims are true, they belong here with real detail — paper weight, printer,
+ * where it ships from — not as adjectives.
+ */
 export default function About() {
   return (
-    <div className="bg-[#F9F9F7] min-h-screen">
+    <div className="o29-field o29-field--olive min-h-screen">
       <Seo
-        title="About — DDouble | Museum-Grade Wall Art, Made in Copenhagen"
-        description="The story behind DDouble: fine-art prints on museum-grade paper, made in Copenhagen and designed to be lived with, not just looked at."
+        title="Reality is only the starting point — ØBJECT 29"
+        description="ØBJECT 29 makes contemporary surreal art: impossible rooms, altered scale, and objects placed where they could not be."
         canonicalPath="/about"
       />
       <Navbar />
 
-      <main id="main">
-      {/* Hero */}
-      <section className="pt-28 md:pt-36 pb-24 md:pb-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto">
-        <FadeIn>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">Our Story</span>
-          <h1 className="mt-4 text-4xl md:text-5xl lg:text-6xl font-light text-[#1A1A1A] leading-[1.1] max-w-3xl">
-            Art should be lived with,<br />not just looked at.
+      <main id="main" className="pt-header">
+        {/* The statement */}
+        <section className="relative mx-auto w-full max-w-page overflow-clip px-gutter py-hold">
+          <MetaLabel items={["ØBJECT 29", "Manifesto"]} />
+          <h1 className="mt-8 max-w-[14ch] font-display text-display font-medium text-field-fg">
+            Reality is only the starting point.
           </h1>
-        </FadeIn>
-      </section>
 
-      {/* Full-width image */}
-      <section className="h-[50vh] md:h-[70vh]">
-        <img
-          src={aboutImg}
-          alt="DDouble studio"
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-      </section>
+          {/* The flat disc: one flat fill, no radial gradient, no shading, no
+              shadow. A shaded circle is exactly the generic blob the system
+              forbids, and it is not what the artworks' spheres look like.
+              Desktop only — it competes for a canvas too small below md. */}
+          <span
+            aria-hidden="true"
+            // `rounded-[50%]`, not `rounded-full`: this is a circle by SHAPE,
+            // which the system allows, and the distinction keeps the guard's
+            // ban on `rounded-*` as a surface treatment strict.
+            className="pointer-events-none absolute -right-16 bottom-[-12%] hidden h-[42vw] max-h-[420px] w-[42vw] max-w-[420px] rounded-[50%] bg-o29-bone md:block"
+          />
+        </section>
 
-      {/* Story */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24">
-          <FadeIn>
-            <div className="max-w-lg">
-              <h2 className="text-2xl md:text-3xl font-light text-[#1A1A1A] leading-tight">
-                Founded on the belief that every space deserves art.
-              </h2>
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <div className="space-y-6 text-[#6B6B67] text-base leading-relaxed">
-              <p>
-                DDouble was born from a simple observation: the walls we live within shape how we feel. 
-                Yet for too long, quality art was either inaccessible or impersonal. We set out to change that.
-              </p>
-              <p>
-                Our studio collaborates with artists, photographers, and designers from across Europe to create 
-                prints that are timeless rather than trendy. Each piece is curated to complement the quiet 
-                sophistication of modern living — where less is always more.
-              </p>
-              <p>
-                We believe in slow design. Every print is produced on museum-grade paper with archival inks, 
-                ensuring your art looks as striking in ten years as it does today. Our packaging is fully 
-                sustainable, because caring for beauty extends beyond the frame.
-              </p>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto border-t border-[#E5E5E1]">
-        <FadeIn>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">Values</span>
-          <h2 className="mt-2 text-2xl md:text-3xl font-light text-[#1A1A1A] mb-16">What we stand for</h2>
-        </FadeIn>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-          {[
-            { title: "Timeless Design", text: "We create art that transcends seasons and trends — pieces that grow more meaningful with time." },
-            { title: "Uncompromising Quality", text: "Museum-grade paper, archival inks, and meticulous attention to every detail from studio to doorstep." },
-            { title: "Conscious Craft", text: "Sustainable packaging, ethical production, and a deep respect for the materials and makers behind each print." },
-          ].map((v, i) => (
-            <FadeIn key={i} delay={i * 0.1}>
+        {/* The bone interruption */}
+        <ColourField tone="bone" className="py-hold">
+          <div className="mx-auto w-full max-w-page px-gutter">
+            <div className="grid gap-tight lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-16">
               <div>
-                <h3 className="text-sm font-medium text-[#1A1A1A] tracking-wide">{v.title}</h3>
-                <p className="mt-3 text-sm text-[#6B6B67] leading-relaxed">{v.text}</p>
+                <MetaLabel items={["What this is"]} className="text-o29-slate" />
               </div>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
+              <div className="max-w-reading space-y-6 text-lead text-o29-ink">
+                <p>
+                  ØBJECT 29 makes images of rooms that cannot be entered, objects
+                  that refuse their own scale, and light arriving from the wrong
+                  direction. The work sits between a set and a photograph: every
+                  scene is built, then shot as though it were ordinary.
+                </p>
+                <p>
+                  Nothing here is a document of a real place. The colour is
+                  flat, the geometry is deliberate, and the shadow rarely agrees
+                  with the light. What looks like an interior is a proposition
+                  about one.
+                </p>
+                <p>
+                  Each object is released as an open edition and printed to
+                  order. Details of size, framing and materials sit on every
+                  product page.
+                </p>
+              </div>
+            </div>
+          </div>
+        </ColourField>
 
-      {/* CTA */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto border-t border-[#E5E5E1]">
-        <FadeIn>
-          <div className="text-center max-w-md mx-auto">
-            <h2 className="text-2xl md:text-3xl font-light text-[#1A1A1A]">Discover the collection</h2>
-            <p className="mt-4 text-sm text-[#6B6B67]">
-              Find the perfect piece for your space.
+        {/* Back to olive, and out */}
+        <section className="mx-auto w-full max-w-page px-gutter py-hold">
+          <Reveal>
+            <p className="max-w-lead font-display text-h2 font-medium text-field-fg">
+              The work is the argument. Everything else is packaging.
             </p>
             <Link
               to="/shop"
-              className="mt-8 inline-flex items-center gap-3 bg-[#1A1A1A] text-white text-xs uppercase tracking-[0.15em] px-8 py-4 hover:bg-[#2A2A2A] transition-all duration-300"
+              className="o29-meta mt-tight inline-flex min-h-hit items-center border-b border-current pb-1 text-field-fg transition-colors duration-instant hover:text-o29-ochre"
             >
-              Shop Now <ArrowRight size={14} />
+              See the collection
             </Link>
-          </div>
-        </FadeIn>
-      </section>
+          </Reveal>
+        </section>
       </main>
 
-      <Footer />
+      <Footer tone="vermilion" />
     </div>
   );
 }

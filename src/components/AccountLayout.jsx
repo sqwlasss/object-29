@@ -25,16 +25,16 @@ export default function AccountLayout() {
   const { customer } = useAccount();
 
   return (
-    <div className="bg-[#F9F9F7] min-h-screen">
+    <div className="bg-o29-bone min-h-screen">
       <Navbar />
       <main id="main" className="pt-28 md:pt-36 pb-24 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto">
         <div className="mb-10">
-          <h1 className="text-2xl md:text-3xl font-light text-[#1A1A1A]">My Account</h1>
-          <p className="mt-1 text-sm text-[#6B6B67]">
+          <h1 className="font-display text-h2 font-medium text-o29-ink">My Account</h1>
+          <p className="mt-1 text-sm text-o29-slate">
             {user?.email || customer?.email || "Welcome back"}
           </p>
           {!import.meta.env.VITE_SHOPIFY_CUSTOMER_SYNC_ENDPOINT && (
-            <p className="mt-2 text-xs text-[#6B6B67]">
+            <p className="mt-2 text-xs text-o29-slate">
               Account sync not configured — wishlist syncing is unavailable.
             </p>
           )}
@@ -52,8 +52,8 @@ export default function AccountLayout() {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-3 text-sm whitespace-nowrap transition-colors ${
                       isActive
-                        ? "bg-[#1A1A1A] text-white"
-                        : "text-[#6B6B67] hover:text-[#1A1A1A] hover:bg-[#F1F0EC]"
+                        ? "bg-o29-ink text-o29-bone"
+                        : "text-o29-slate hover:text-o29-ink hover:bg-o29-bone-2"
                     }`
                   }
                 >
@@ -63,7 +63,7 @@ export default function AccountLayout() {
               ))}
               <button
                 onClick={() => logout()}
-                className="flex items-center gap-3 px-4 py-3 text-sm text-[#6B6B67] hover:text-[#1A1A1A] hover:bg-[#F1F0EC] transition-colors text-left w-full"
+                className="flex items-center gap-3 px-4 py-3 text-sm text-o29-slate hover:text-o29-ink hover:bg-o29-bone-2 transition-colors text-left w-full"
               >
                 <LogOut size={16} />
                 Log out

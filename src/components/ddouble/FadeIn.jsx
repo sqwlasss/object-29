@@ -1,30 +1,17 @@
-import { useState, useEffect, useRef } from "react";
+import Reveal from "@/components/motion/Reveal";
 
-export default function FadeIn({ children, className = "", delay = 0 }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { rootMargin: "-50px", threshold: 0 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "none" : "translateY(20px)",
-        transition: `opacity 0.5s ease ${Math.min(delay, 0.4)}s, transform 0.5s ease ${Math.min(delay, 0.4)}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
+/**
+ * Deprecated alias for <Reveal>, kept so the ~140 existing call sites keep
+ * compiling unchanged while the rebrand is in progress. The props are
+ * identical ({ children, className, delay } — delay in seconds).
+ *
+ * Reveal fixes the defect this component used to carry: an inline
+ * `opacity: 0` with no reduced-motion branch and no IntersectionObserver
+ * fallback, which could leave content permanently invisible.
+ *
+ * Call sites migrate to Reveal as each page is restyled; this file is deleted
+ * in stage 8.
+ */
+export default function FadeIn(props) {
+  return <Reveal {...props} />;
 }

@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useCollections } from "@/hooks/useProducts";
+import { BUSINESS, FORMS_ARE_WIRED } from "@/config/business";
+import ColourField from "@/components/o29/ColourField";
+import Mark from "@/components/o29/Mark";
 
 const FALLBACK_COLLECTIONS = [
   { label: "Posters", handle: "posters" },
@@ -10,7 +13,21 @@ const FALLBACK_COLLECTIONS = [
   { label: "Bedding & Pillows", handle: "bedding-pillows" },
 ];
 
-export default function Footer() {
+/**
+ * FOOTER BY INTENT, NOT BY CONSTANT.
+ *
+ * `tone="vermilion"` on pages whose job is seduction (Home, About, Contact);
+ * `tone="ink"` on pages whose job is transaction (Shop, Product, Favorites,
+ * account, every policy page). That split is what stops red becoming
+ * wallpaper — a shopper deep in the catalogue can go a whole session without
+ * seeing it, which is exactly why it lands when they do.
+ *
+ * The small, uncropped Ø29 at the bottom right is the brand's REAL signature —
+ * it sits exactly where it sits in the reference artworks. The oversized
+ * cropped mark is a different object entirely and appears once in the whole
+ * site, on the homepage.
+ */
+export default function Footer({ tone = "ink" }) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const { data: collections } = useCollections();
@@ -20,9 +37,13 @@ export default function Footer() {
     ? collections.map((c) => ({ label: c.title, handle: c.handle }))
     : FALLBACK_COLLECTIONS;
 
-  // Rate limiting for this endpoint belongs on the backend (not present). Add server-side limits before launch.
+  // There is no subscribe endpoint. Until FORMS_ARE_WIRED is true this form is
+  // not rendered at all, because showing "thank you for subscribing" to
+  // someone who was not subscribed is the same class of problem as the
+  // invented testimonials. See src/config/business.js.
   const handleSubscribe = (e) => {
     e.preventDefault();
+    if (!FORMS_ARE_WIRED) return;
     if (email) {
       setSubscribed(true);
       setEmail("");
@@ -30,50 +51,63 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#F1F0EC] border-t border-[#E5E5E1]">
-      <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16">
-        {/* Newsletter */}
-        <div className="py-16 md:py-24 border-b border-[#E5E5E1]">
-          <div className="max-w-lg">
-            <h3 className="text-2xl md:text-3xl font-light text-[#1A1A1A] leading-tight">
-              Stay inspired
-            </h3>
-            <p className="mt-3 text-sm text-[#5A5A56] leading-relaxed">
-              Join our community for early access to new collections, styling tips, and exclusive offers.
+    <ColourField as="footer" tone={tone} className="relative overflow-clip">
+      <div className="mx-auto w-full max-w-page px-gutter">
+        {/* Newsletter and links share one band — stacking them made the footer
+            taller than the viewport on short pages. */}
+        <div className="grid gap-tight py-tight lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
+          <div className="max-w-lead">
+            <h2 className="font-display text-h2 font-medium text-field-fg">
+              Join the list
+            </h2>
+            <p className="mt-3 text-sm text-field-muted">
+              {FORMS_ARE_WIRED
+                ? "New objects, released in small editions. No noise."
+                : "New objects, released in small editions. Email us to be added."}
             </p>
-            {subscribed ? (
-              <p className="mt-6 text-sm text-[#1A1A1A]">Thank you for subscribing.</p>
+            {!FORMS_ARE_WIRED ? (
+              <a
+                href={`mailto:${BUSINESS.email}`}
+                className="o29-meta mt-6 inline-flex min-h-hit items-center border-b border-current pb-1 text-field-fg"
+              >
+                {BUSINESS.email}
+              </a>
+            ) : subscribed ? (
+              <p className="mt-6 text-sm text-field-fg">Thank you — you&rsquo;re on the list.</p>
             ) : (
-              <form onSubmit={handleSubscribe} className="mt-6 flex items-center border-b border-[#1A1A1A]">
+              <form onSubmit={handleSubscribe} className="mt-6 flex items-center border-b border-control">
                 <label htmlFor="newsletter-email" className="sr-only">Email address</label>
                 <input
                   id="newsletter-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="flex-1 bg-transparent py-3 text-sm text-[#1A1A1A] placeholder:text-[#5A5A56]"
+                  placeholder="Your email"
+                  className="min-h-hit flex-1 bg-transparent text-sm text-field-fg outline-none placeholder:text-field-muted"
                   required
                 />
-                <button type="submit" aria-label="Subscribe" className="min-w-11 min-h-11 flex items-center justify-center text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">
-                  <ArrowRight size={18} />
+                <button
+                  type="submit"
+                  aria-label="Subscribe"
+                  className="o29-hit flex items-center justify-center text-field-fg transition-opacity duration-instant hover:opacity-60"
+                >
+                  <ArrowRight size={18} aria-hidden="true" />
                 </button>
               </form>
             )}
           </div>
-        </div>
 
-        {/* Links */}
-        <div className="py-12 md:py-16 grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* Links */}
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div>
-            <h3 className="text-[11px] uppercase tracking-[0.15em] text-[#5A5A56] mb-4">Shop</h3>
-            <div className="space-y-3">
-              <Link to="/shop" className="block text-sm text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">All Products</Link>
+            <h3 className="o29-meta mb-4 text-field-muted">Shop</h3>
+            <div className="space-y-1">
+              <Link to="/shop" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">All objects</Link>
               {shopLinks.map((collection) => (
                 <Link
                   key={collection.handle}
                   to={`/shop?category=${collection.handle}`}
-                  className="block text-sm text-[#1A1A1A] hover:text-[#5A5A56] transition-colors"
+                  className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60"
                 >
                   {collection.label}
                 </Link>
@@ -81,43 +115,55 @@ export default function Footer() {
             </div>
           </div>
           <div>
-            <h3 className="text-[11px] uppercase tracking-[0.15em] text-[#5A5A56] mb-4">Info</h3>
-            <div className="space-y-3">
-              <Link to="/about" className="block text-sm text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">About Us</Link>
-              <Link to="/contact" className="block text-sm text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">Contact</Link>
-              <Link to="/faq" className="block text-sm text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">FAQ</Link>
+            <h3 className="o29-meta mb-4 text-field-muted">Info</h3>
+            <div className="space-y-1">
+              <Link to="/about" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">About</Link>
+              <Link to="/contact" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">Contact</Link>
+              <Link to="/faq" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">FAQ</Link>
+              <a
+                href={BUSINESS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60"
+              >
+                Instagram
+              </a>
             </div>
           </div>
           <div>
-            <h3 className="text-[11px] uppercase tracking-[0.15em] text-[#5A5A56] mb-4">Help</h3>
-            <div className="space-y-3">
-              <Link to="/shipping" className="block text-sm text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">Shipping</Link>
-              <Link to="/returns" className="block text-sm text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">Returns</Link>
-              <Link to="/faq" className="block text-sm text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">Size Guide</Link>
+            <h3 className="o29-meta mb-4 text-field-muted">Help</h3>
+            <div className="space-y-1">
+              <Link to="/shipping" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">Shipping</Link>
+              <Link to="/returns" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">Returns</Link>
+              <Link to="/faq" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">Size guide</Link>
             </div>
           </div>
           <div>
-            <h3 className="text-[11px] uppercase tracking-[0.15em] text-[#5A5A56] mb-4">Follow</h3>
-            <div className="flex gap-4">
-              <a href="https://www.instagram.com/theddouble/" target="_blank" rel="noopener noreferrer" className="min-w-11 min-h-11 flex items-center justify-center -m-2 text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">
-                <Instagram size={18} />
-              </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="min-w-11 min-h-11 flex items-center justify-center -m-2 text-[#1A1A1A] hover:text-[#5A5A56] transition-colors">
-                <Facebook size={18} />
-              </a>
+            <h3 className="o29-meta mb-4 text-field-muted">Legal</h3>
+            <div className="space-y-1">
+              <Link to="/privacy" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">Privacy</Link>
+              <Link to="/terms" className="flex min-h-hit items-center text-sm text-field-fg transition-opacity duration-instant hover:opacity-60">Terms</Link>
             </div>
+          </div>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="py-6 border-t border-[#E5E5E1] flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-[11px] text-[#5A5A56]">© 2026 DDouble. All rights reserved.</span>
-          <div className="flex gap-6">
-            <Link to="/privacy" className="text-[11px] text-[#5A5A56] hover:text-[#1A1A1A] transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="text-[11px] text-[#5A5A56] hover:text-[#1A1A1A] transition-colors">Terms of Service</Link>
+        {/* The wordmark, the line, and the signature */}
+        <div className="flex flex-wrap items-end justify-between gap-8 border-t border-hairline py-tight">
+          <div>
+            <p className="font-display text-h1 font-medium leading-none tracking-[-0.028em] text-field-fg">
+              ØBJECT&nbsp;29
+            </p>
+            <p className="o29-meta mt-4 text-field-muted">Art for another reality</p>
           </div>
+          <Mark variant="signature" className="ml-auto" />
+        </div>
+
+        <div className="flex flex-col items-start justify-between gap-2 border-t border-hairline py-6 md:flex-row md:items-center">
+          <p className="o29-meta text-field-muted">© 2026 ØBJECT 29</p>
+          <p className="o29-meta text-field-muted">Secure checkout by Shopify</p>
         </div>
       </div>
-    </footer>
+    </ColourField>
   );
 }

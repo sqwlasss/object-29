@@ -1,0 +1,22 @@
+# DO NOT FORMAT THIS FILE.
+#
+# src/lib/shopify/queries.js injects `@inContext(country: GB)` into the three
+# product queries with a regex that matches over the raw template literals:
+#
+#   /(query\s+\w+(?:\s*\([^)]*\))?)/
+#
+# Reindenting, moving the operation name to its own line, or inserting a
+# comment above `query AllProducts` can move that insertion point or lose it
+# entirely — which silently restores Shopify's currency conversion and reverts
+# commit 4d8da9d ("pin product queries to store country to prevent currency
+# conversion on display").
+#
+# The file contains no presentational content and is out of scope for the
+# ØBJECT 29 rebrand. `npm run lint` asserts the pinning still holds.
+src/lib/shopify/queries.js
+
+# Build output and vendored files
+dist/
+node_modules/
+package-lock.json
+public/sitemap.xml

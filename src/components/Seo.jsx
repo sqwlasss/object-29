@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 
-const SITE_URL = "https://ddouble-store.vercel.app";
-const DEFAULT_TITLE = "DDouble — Museum-Grade Wall Art | Made in Copenhagen";
-const DEFAULT_DESCRIPTION = "Fine-art prints and home objects, made in Copenhagen.";
+import { SITE_URL } from "@/config/site";
+const DEFAULT_TITLE = "ØBJECT 29 — Art for another reality";
+const DEFAULT_DESCRIPTION =
+  "Contemporary surreal art and wall art. Impossible rooms, oversized objects and altered realities, printed as collectible editions.";
 
 function setMeta(attr, key, content) {
   let el = document.head.querySelector(`meta[${attr}="${key}"]`);

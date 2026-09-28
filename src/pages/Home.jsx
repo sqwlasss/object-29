@@ -1,339 +1,136 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import Seo from "@/components/Seo";
-import FadeIn from "@/components/ddouble/FadeIn";
-import ProductCard from "@/components/ddouble/ProductCard";
 import Navbar from "@/components/ddouble/Navbar";
 import Footer from "@/components/ddouble/Footer";
+import Reveal from "@/components/motion/Reveal";
+import ProductCard from "@/components/ddouble/ProductCard";
+import MetaLabel from "@/components/o29/MetaLabel";
+import Mark from "@/components/o29/Mark";
+import HeroRoom from "@/components/home/HeroRoom";
+import CollectionIndex from "@/components/home/CollectionIndex";
 import { useCurrency } from "@/lib/CurrencyContext";
-import { useCollections, useCollectionProducts } from "@/hooks/useProducts";
-import { shopifyImage } from "@/lib/utils";
-import homeHero from "../../assets/home.jpg";
-import homeHero800 from "../../assets/home-800.jpg";
-import photoVertical from "../../assets/photo_vertical.jpg";
-import photo2026 from "../../assets/photo_2026.jpg";
-import diningImg from "../../assets/photo_2026-07-24_15-18-36.jpg";
-import galleryWallImg from "../../assets/photo_2026-07-30_22-18-57.jpg";
+import { useCollections, useCollectionProducts, useProduct } from "@/hooks/useProducts";
+import { HERO, INDEX } from "@/config/editorial";
 
-const LIFESTYLE_IMAGES = {
-  bedroom: photo2026,
-  dining: diningImg,
-  galleryWall: galleryWallImg,
-  office: photoVertical,
-};
-
-const TESTIMONIALS = [
-  { name: "Sofia M.", location: "Stockholm", text: "The quality of the prints is extraordinary. My living room finally feels complete." },
-  { name: "Thomas K.", location: "Copenhagen", text: "DDouble understands that art should be felt, not just seen. Every piece has presence." },
-  { name: "Emma L.", location: "Berlin", text: "I've ordered from many poster brands — DDouble is in a different league entirely." },
-];
-
-function CollectionCard({ collection }) {
-  const { country } = useCurrency();
-  const { data } = useCollectionProducts(collection.handle, country);
-  const firstProduct = data?.products?.[0];
-
-  return (
-    <Link to={`/shop?category=${collection.handle}`} className="group block">
-      <div className="aspect-square overflow-hidden bg-[#F1F0EC] relative">
-        {firstProduct?.image || collection.image ? (
-          <img
-            src={shopifyImage(firstProduct?.image || collection.image, 600)}
-            alt={collection.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center px-4">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#5A5A56] text-center">
-              {collection.title}
-            </span>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        <div className="absolute bottom-0 left-0 p-5 md:p-6">
-          <h3 className="text-sm font-medium text-white tracking-wide">{collection.title}</h3>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-function FeaturedProducts() {
-  const { country } = useCurrency();
-  const { data: collections } = useCollections();
-
-  const categoryCollections = collections || [];
-
-  return (
-    <>
-      {categoryCollections.slice(0, 2).map((col) => (
-        <CollectionSection key={col.handle} collection={col} country={country} />
-      ))}
-    </>
-  );
-}
-
-function CollectionSection({ collection, country }) {
-  const { data, isLoading } = useCollectionProducts(collection.handle, country);
-  const products = (data?.products || []).slice(0, 4);
-
-  if (isLoading) {
-    return (
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto border-t border-[#E5E5E1]">
-        <div className="flex items-end justify-between mb-12 md:mb-16">
-          <div>
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">Featured</span>
-            <h2 className="mt-2 text-2xl md:text-3xl font-light text-[#1A1A1A]">{collection.title}</h2>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-[#F1F0EC] aspect-[3/4] animate-pulse" />
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  if (products.length === 0) return null;
-
-  return (
-    <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto border-t border-[#E5E5E1]">
-      <FadeIn>
-        <div className="flex items-end justify-between mb-12 md:mb-16">
-          <div>
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">Featured</span>
-            <h2 className="mt-2 text-2xl md:text-3xl font-light text-[#1A1A1A]">{collection.title}</h2>
-          </div>
-          <Link to={`/shop?category=${collection.handle}`} className="text-xs uppercase tracking-[0.1em] text-[#6B6B67] hover:text-[#1A1A1A] transition-colors">
-            Shop All
-          </Link>
-        </div>
-      </FadeIn>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-        {products.map((product, i) => (
-          <FadeIn key={product.handle} delay={i * 0.08}>
-            <ProductCard product={product} index={i} />
-          </FadeIn>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function LatestProducts() {
-  const { country } = useCurrency();
-  const { data: collections } = useCollections();
-
-  const categoryCollections = collections || [];
-
-  const lastTwo = categoryCollections.slice(2, 4);
-
-  return (
-    <>
-      {lastTwo.map((col) => (
-        <CollectionSection key={col.handle} collection={col} country={country} />
-      ))}
-    </>
-  );
-}
-
+/**
+ * TWO BRAND COLOURS ON THIS PAGE, COUNTED: cobalt (the hero wall) and
+ * vermilion (the doorway band and the footer). Ink and bone are structural and
+ * do not count. There is no third saturated ground — the homepage gets no
+ * exemption from the rule that governs every other page.
+ *
+ * Everything that is not the hero or the footer is a bone room, and the
+ * quiet is the point: it is what makes the two colour events land.
+ *
+ * Deleted here, deliberately:
+ *  - three invented customer testimonials with names and cities
+ *  - a scrim banner with white type over a photograph
+ *  - the "Live with art" lifestyle grid and the Instagram strip, both built
+ *    from the previous brand's stock photography
+ *  - all seven assets/ imports, along with the files
+ */
 export default function Home() {
   const { country } = useCurrency();
   const { data: collections } = useCollections();
-  const { data: abstractData } = useCollectionProducts("abstract", country);
-  const allProducts = abstractData?.products || [];
 
-  const categoryCollections = collections || [];
+  // The hero artwork resolves through editorial.js: a pinned handle, else the
+  // first product of a nominated collection, else the first collection.
+  // `useProduct` is gated on `enabled: !!handle`, so an unset handle no-ops
+  // rather than firing a query guaranteed to miss.
+  const { data: pinned, isLoading: pinnedLoading } = useProduct(HERO.productHandle, country);
+  const fallbackHandle = HERO.fallbackCollection || collections?.[0]?.handle;
+  const { data: heroCollection, isLoading: collectionLoading } = useCollectionProducts(
+    HERO.productHandle ? null : fallbackHandle,
+    country
+  );
+  const heroProduct = pinned || heroCollection?.products?.[0] || null;
+  const heroLoading = HERO.productHandle ? pinnedLoading : collectionLoading;
+
+  // The featured row reuses the first collection's products — no extra query
+  // beyond the one the hero already made.
+  const featured = heroCollection?.products?.slice(0, 3) ?? [];
 
   return (
-    <div className="bg-[#F9F9F7] min-h-screen">
-      <Seo title="DDouble — Museum-Grade Wall Art | Made in Copenhagen" canonicalPath="/" />
+    <div className="o29-field o29-field--bone min-h-screen">
+      <Seo
+        title="ØBJECT 29 — Art for another reality"
+        description="Contemporary surreal art and wall art. Impossible rooms, oversized objects and altered realities, printed as collectible editions."
+        canonicalPath="/"
+      />
       <Navbar />
 
-      <main id="main">
-      {/* Hero */}
-      <section className="min-h-screen flex flex-col-reverse lg:flex-row">
-        <div className="flex-1 flex items-center justify-center px-6 md:px-16 py-12 md:py-32 lg:py-0">
-          <FadeIn>
-            <div className="max-w-md">
-              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-light text-[#1A1A1A] leading-[1.1] tracking-[-0.02em]">
-                Your dream home starts here.
-              </h1>
-              <p className="mt-6 text-[#6B6B67] text-base leading-relaxed">
-                <em>Discover decor inspired by the world's most beautiful interiors.</em>
-              </p>
-              <Link
-                to="/shop"
-                className="mt-8 inline-flex items-center gap-3 bg-[#1A1A1A] text-white text-xs uppercase tracking-[0.15em] px-8 py-4 hover:bg-[#2A2A2A] transition-all duration-300"
-              >
-                Shop All
-                <ArrowRight size={14} />
-              </Link>
-            </div>
-          </FadeIn>
-        </div>
-        <div className="flex-1 lg:h-screen">
-          <img
-            src={homeHero800}
-            srcSet={`${homeHero800} 800w, ${homeHero} 1056w`}
-            sizes="(max-width: 1023px) 100vw, 50vw"
-            width="800"
-            height="970"
-            fetchpriority="high"
-            alt="Scandinavian living room with premium wall art"
-            className="w-full h-[60vh] lg:h-full object-cover"
-          />
-        </div>
-      </section>
+      <main id="main" className="pt-header">
+        <HeroRoom product={heroProduct} isLoading={heroLoading} />
 
-      {/* Collections */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto">
-        <FadeIn>
-          <div className="flex items-end justify-between mb-12 md:mb-16">
-            <div>
-              <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">Explore</span>
-              <h2 className="mt-2 text-2xl md:text-3xl font-light text-[#1A1A1A]">Collections</h2>
-            </div>
-            <Link to="/shop" className="text-xs uppercase tracking-[0.1em] text-[#6B6B67] hover:text-[#1A1A1A] transition-colors hidden md:block">
-              View All
-            </Link>
-          </div>
-        </FadeIn>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {categoryCollections.slice(0, 8).map((col, i) => (
-            <FadeIn key={col.handle} delay={i * 0.05}>
-              <CollectionCard collection={col} />
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Products (first 2 collections) */}
-      <FeaturedProducts />
-
-      {/* Lifestyle Banner */}
-      <section className="relative h-[60vh] md:h-[70vh] overflow-hidden bg-[#F1F0EC]">
-        <img
-          src={LIFESTYLE_IMAGES.bedroom}
-          alt="Minimalist bedroom with curated wall art"
-          className="w-full h-full object-cover object-[center_35%]"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex items-center justify-center text-center px-6">
-          <FadeIn>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-white leading-tight">
-              Curated for<br />modern living
+        {/* ── the hold: bone, and a lot of it ─────────────────────────── */}
+        <section className="mx-auto w-full max-w-page px-gutter py-hold">
+          <Reveal>
+            <MetaLabel items={["Index", "Collections"]} className="text-o29-slate" />
+            <h2 className="mb-tight mt-6 max-w-lead font-display text-h2 font-medium text-o29-ink">
+              Every object begins somewhere that could not exist.
             </h2>
-            <Link
-              to="/shop"
-              className="mt-8 inline-flex items-center gap-3 bg-white text-[#1A1A1A] text-xs uppercase tracking-[0.15em] px-8 py-4 hover:bg-[#F1F0EC] transition-all duration-300"
-            >
-              Explore
-              <ArrowRight size={14} />
-            </Link>
-          </FadeIn>
-        </div>
-      </section>
+          </Reveal>
+          <Reveal delay={0.07}>
+            <CollectionIndex collections={collections ?? []} limit={INDEX.limit} />
+          </Reveal>
+        </section>
 
-      {/* More Products (next 2 collections) */}
-      <LatestProducts />
-
-      {/* Lifestyle Grid */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto border-t border-[#E5E5E1]">
-        <FadeIn>
-          <div className="mb-12 md:mb-16">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">Inspiration</span>
-            <h2 className="mt-2 text-2xl md:text-3xl font-light text-[#1A1A1A]">Live with art</h2>
-          </div>
-        </FadeIn>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <FadeIn className="md:col-span-2">
-            <img src={LIFESTYLE_IMAGES.dining} alt="Dining room with art" className="w-full h-[400px] md:h-[500px] object-cover" loading="lazy" />
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <img src={LIFESTYLE_IMAGES.galleryWall} alt="Gallery wall arrangement" className="w-full h-[400px] md:h-[500px] object-cover scale-x-[-1]" loading="lazy" />
-          </FadeIn>
-          <FadeIn delay={0.15}>
-            <img src={LIFESTYLE_IMAGES.office} alt="Home office with art" className="w-full h-[400px] md:h-[500px] object-cover" loading="lazy" />
-          </FadeIn>
-          <FadeIn delay={0.2} className="md:col-span-2">
-            <div className="h-[400px] md:h-[500px] bg-[#F1F0EC] flex items-center justify-center p-12">
-              <div className="max-w-md text-center">
-                <h3 className="text-2xl md:text-3xl font-light text-[#1A1A1A] leading-tight">
-                  Every wall tells a story
-                </h3>
-                <p className="mt-4 text-sm text-[#5A5A56] leading-relaxed">
-                  Discover how our prints transform spaces from the ordinary to the extraordinary.
-                </p>
+        {/* ── featured objects ────────────────────────────────────────── */}
+        {featured.length > 0 && (
+          <section className="mx-auto w-full max-w-page px-gutter pb-hold">
+            <Reveal>
+              <div className="mb-tight flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <MetaLabel items={["Selected", heroCollection?.title]} className="text-o29-slate" />
+                  <h2 className="mt-4 font-display text-h2 font-medium text-o29-ink">
+                    Recent objects
+                  </h2>
+                </div>
                 <Link
                   to="/shop"
-                  className="mt-6 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-[#1A1A1A] underline underline-offset-4"
+                  className="o29-meta flex min-h-hit items-center text-o29-ink underline underline-offset-4 decoration-o29-edge transition-colors duration-instant hover:decoration-o29-ochre"
                 >
-                  Shop Now <ArrowRight size={12} />
+                  All objects
                 </Link>
               </div>
+            </Reveal>
+            <div className="grid grid-cols-2 gap-x-5 gap-y-20 lg:grid-cols-3">
+              {featured.map((p, i) => (
+                <Reveal key={p.handle} delay={i * 0.07}>
+                  <ProductCard product={p} index={i} />
+                </Reveal>
+              ))}
             </div>
-          </FadeIn>
-        </div>
-      </section>
+          </section>
+        )}
 
-      {/* Testimonials */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 max-w-[1440px] mx-auto border-t border-[#E5E5E1]">
-        <FadeIn>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">Voices</span>
-          <h2 className="mt-2 text-2xl md:text-3xl font-light text-[#1A1A1A] mb-12 md:mb-16">What our customers say</h2>
-        </FadeIn>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-          {TESTIMONIALS.map((t, i) => (
-            <FadeIn key={i} delay={i * 0.1}>
-              <blockquote className="space-y-4">
-                <p className="text-base text-[#1A1A1A] leading-relaxed font-light italic">
-                  &ldquo;{t.text}&rdquo;
+        {/* ── the one oversized cropped mark in the entire site ───────── */}
+        <section className="relative overflow-clip">
+          <div className="mx-auto w-full max-w-page px-gutter pb-hold">
+            <Reveal>
+              <div className="relative">
+                <Mark
+                  variant="cropped"
+                  className="block -translate-x-[18%] text-o29-bone-2"
+                />
+                <p className="mt-tight max-w-lead text-lead text-o29-ink">
+                  ØBJECT 29 makes images of rooms that cannot be entered, objects
+                  that refuse their own scale, and light that arrives from the
+                  wrong direction. Each one is printed as an open edition.
                 </p>
-                <footer className="text-xs text-[#6B6B67]">
-                  {t.name} — {t.location}
-                </footer>
-              </blockquote>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-
-      {/* Instagram Gallery */}
-      {allProducts?.length > 0 && (
-      <section className="py-24 md:py-32 border-t border-[#E5E5E1]">
-        <FadeIn>
-          <div className="text-center mb-12">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[#5A5A56]">@ddouble</span>
-            <h2 className="mt-2 text-2xl md:text-3xl font-light text-[#1A1A1A]">Follow our journey</h2>
+                <Link
+                  to="/about"
+                  className="o29-meta mt-8 inline-flex min-h-hit items-center border-b border-o29-edge pb-1 text-o29-ink transition-colors duration-instant hover:border-o29-ochre"
+                >
+                  The manifesto
+                </Link>
+              </div>
+            </Reveal>
           </div>
-        </FadeIn>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-1">
-          {allProducts.slice(0, 6).map((p, i) => (
-            <FadeIn key={p.handle} delay={i * 0.05}>
-              <a href="https://www.instagram.com/theddouble/" target="_blank" rel="noopener noreferrer" className="block group">
-                <div className="aspect-square overflow-hidden">
-                  <img
-                    src={shopifyImage(p.image, 400)}
-                    alt={p.title}
-                    width="400"
-                    height="400"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-              </a>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-      )}
+        </section>
       </main>
 
-      <Footer />
+      {/* Vermilion: this page's job is seduction, not transaction. */}
+      <Footer tone="vermilion" />
     </div>
   );
 }
