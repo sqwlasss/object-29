@@ -1,0 +1,18 @@
+// Syncthing ignore rules for this folder.
+//
+// Build artefacts and installed dependencies are NOT synced: they are large,
+// churn constantly, and are platform-specific — node_modules built on Windows
+// is not what a Raspberry Pi should run. Each machine runs `npm install`
+// itself. (The ddouble-store folder has no .stignore, so it has been syncing
+// ~900 package directories to the Pi.)
+node_modules
+dist
+.vercel
+
+// Syncthing's own per-folder state
+.stversions
+
+// Editor / OS noise
+.DS_Store
+Thumbs.db
+*.log
